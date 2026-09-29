@@ -1,0 +1,92 @@
+import {
+  AlertCircle,
+  AlertTriangle,
+  ArrowRight,
+  BadgeCheck,
+  Briefcase,
+  Calendar,
+  CalendarCheck,
+  CalendarDays,
+  CalendarPlus,
+  Camera,
+  Check,
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  Download,
+  History,
+  Info,
+  KeyRound,
+  Lock,
+  LogOut,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Mic,
+  PartyPopper,
+  Phone,
+  PiggyBank,
+  Search,
+  ShoppingBag,
+  Star,
+  Users,
+  UserCheck,
+  UserSearch,
+  Utensils,
+  Wallet,
+  X,
+  type LucideProps,
+} from "lucide-react";
+
+const icons = {
+  "alert-circle": AlertCircle,
+  "alert-triangle": AlertTriangle,
+  "arrow-right": ArrowRight,
+  "badge-check": BadgeCheck,
+  briefcase: Briefcase,
+  calendar: Calendar,
+  "calendar-check": CalendarCheck,
+  "calendar-days": CalendarDays,
+  "calendar-plus": CalendarPlus,
+  camera: Camera,
+  check: Check,
+  "check-circle": CheckCircle,
+  "chevron-down": ChevronDown,
+  "chevron-up": ChevronUp,
+  clock: Clock,
+  download: Download,
+  history: History,
+  info: Info,
+  "key-round": KeyRound,
+  lock: Lock,
+  "log-out": LogOut,
+  mail: Mail,
+  "map-pin": MapPin,
+  "message-square": MessageSquare,
+  mic: Mic,
+  "party-popper": PartyPopper,
+  phone: Phone,
+  "piggy-bank": PiggyBank,
+  search: Search,
+  "shopping-bag": ShoppingBag,
+  star: Star,
+  users: Users,
+  "user-check": UserCheck,
+  "user-search": UserSearch,
+  utensils: Utensils,
+  wallet: Wallet,
+  x: X,
+} satisfies Record<string, React.ComponentType<LucideProps>>;
+
+export type IconName = keyof typeof icons;
+
+export interface IconProps extends Omit<LucideProps, "ref"> {
+  name: IconName;
+  size?: number;
+}
+
+export function Icon({ name, size = 20, ...rest }: IconProps) {
+  const Glyph = icons[name];
+  return <Glyph size={size} aria-hidden="true" {...rest} />;
+}

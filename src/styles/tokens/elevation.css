@@ -1,0 +1,11 @@
+:root{
+/* Flat-first. Shadows are warm-brown tinted, never neutral grey. */
+--shadow-none:none;
+--shadow-sm:0 1px 2px rgba(34,32,30,.07);
+--shadow-md:0 4px 14px rgba(34,32,30,.09);
+--shadow-lg:0 14px 36px rgba(34,32,30,.12);
+/* Signature: hard offset "poster" shadow */
+--shadow-offset:5px 5px 0 var(--ink-900);
+--shadow-offset-blue:5px 5px 0 var(--green-500);
+--shadow-offset-yellow:5px 5px 0 var(--yellow-500);
+}

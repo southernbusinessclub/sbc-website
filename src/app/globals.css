@@ -1,0 +1,22 @@
+@import "../styles/tokens/fonts.css";
+@import "../styles/tokens/colors.css";
+@import "../styles/tokens/typography.css";
+@import "../styles/tokens/spacing.css";
+@import "../styles/tokens/radius.css";
+@import "../styles/tokens/elevation.css";
+@import "../styles/tokens/motion.css";
+@import "../styles/tokens/base.css";
+
+html {
+  height: 100%;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100%;
+}

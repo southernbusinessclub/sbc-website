@@ -1,0 +1,39 @@
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-width: 280px;
+  max-width: 420px;
+  background: var(--surface-inverse);
+  color: var(--text-inverse);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-lg);
+  border-left: 4px solid var(--bar-color, var(--status-success));
+}
+
+.icon {
+  color: var(--bar-color, var(--status-success));
+  display: inline-flex;
+  margin-top: 1px;
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+.message {
+  font-size: 14px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.close {
+  color: var(--text-inverse);
+}

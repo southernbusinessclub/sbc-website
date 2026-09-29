@@ -1,0 +1,63 @@
+.label {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  cursor: pointer;
+}
+
+.hasDescription {
+  align-items: flex-start;
+}
+
+.label:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.circle {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: var(--border-width) solid var(--ink-200);
+  background: var(--surface-card);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+
+.circleWithDescription {
+  margin-top: 2px;
+}
+
+.circleChecked {
+  border-color: var(--green-500);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--brand-primary);
+}
+
+.text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-heading);
+}
+
+.description {
+  display: block;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}

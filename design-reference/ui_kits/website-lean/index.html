@@ -1,0 +1,69 @@
+<!-- @dsCard group="Website" viewport="1280x820" name="Club website (lean launch)" subtitle="Phase 1 — no Shop or Members; Events and Workshops split" -->
+<!doctype html><html><head><meta charset="utf-8"><title>Southern Business Club — website kit v2</title>
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0}</style></head>
+<body><div id="root"></div>
+<script type="text/babel" src="ChromeLean.jsx"></script>
+<script type="text/babel" src="HomeLean.jsx"></script>
+<script type="text/babel" src="EventsLean.jsx"></script>
+<script type="text/babel" src="WorkshopsLean.jsx"></script>
+<!-- Phase 2: uncomment one line to switch a parked page back on (pair it with its route below
+     and its NAV entry in ChromeLean.jsx):
+<script type="text/babel" src="_optional/ShopLean.jsx"></script>
+<script type="text/babel" src="_optional/MembersLean.jsx"></script>
+-->
+<script type="text/babel" src="JoinLean.jsx"></script>
+<script type="text/babel" src="LoginLean.jsx"></script>
+<script type="text/babel" src="AccountLean.jsx"></script>
+<script type="text/babel" src="ClaimLean.jsx"></script>
+<script type="text/babel" src="AdminLean.jsx"></script>
+<script type="text/babel" data-presets="react">
+const { Dialog, Toast, Button } = window.SouthernBusinessClubDesignSystem_c9c84e;
+
+const USER = { name: 'Steve Jobs', initials: 'SJ', email: 'sjobs@southern.edu', major: 'Business administration', standing: 'Junior', since: '2025', duesPaid: true, officer: 'Vice president' };
+
+function App() {
+  const [page, setPage] = React.useState('Home');
+  const [user, setUser] = React.useState(null);
+  const [dialog, setDialog] = React.useState(false);
+  const [toast, setToast] = React.useState(null);
+  const go = (p) => { setPage(p); window.scrollTo(0, 0); };
+  const rsvp = () => setDialog(true);
+  const notify = (t) => { setToast(t); setTimeout(() => setToast(null), 4200); };
+  const confirm = () => { setDialog(false); notify({ title: 'You are on the list', message: "We'll text you as soon as the date is set." }); };
+  const submit = () => notify({ title: 'You are on the roster', message: 'Sarah and Andrew just got your name and number. Bring $10 cash to the next event.' });
+  const login = () => { setUser(USER); go('Account'); notify({ title: 'Signed in', message: 'Welcome back, Steve.' }); };
+  const claimed = (m) => { setUser(m); go('Account'); notify({ title: 'Account claimed', message: m.duesPaid ? 'Your dues were already on record. Nothing owed.' : 'Dues still show unpaid — text Sarah to sort it out.' }); };
+  const logout = () => { setUser(null); go('Home'); };
+  const feedback = (title) => notify({ title: 'Feedback sent', message: 'The officers will see your notes on ' + title + '.' });
+  return (
+    <div>
+      <SiteHeaderV2 page={page} onNavigate={go} user={user} onLogin={() => go('Login')} onLogout={logout} />
+      {page === 'Home' ? <HomeLean onNavigate={go} onRsvp={rsvp} /> : null}
+      {page === 'Events' ? <EventsLean onRsvp={rsvp} /> : null}
+      {page === 'Workshops' ? <WorkshopsLean /> : null}
+      {page === 'Claim' ? <ClaimLean onNavigate={go} onClaimed={claimed} /> : null}
+      {page === 'Admin' ? (user && user.officer ? <AdminLean user={user} onNavigate={go} onNotify={notify} /> : <LoginLean onLogin={login} onNavigate={go} />) : null}
+      {/* Phase 2 routes — restore alongside the script tags above:
+      {page === 'Shop' ? <ShopLean onNavigate={go} user={user} onReserve={(n) => notify({ title: 'Sizes reserved', message: n + ' piece' + (n > 1 ? 's' : '') + " held for Drop 01. We'll text you when it closes." })} /> : null}
+      {page === 'Members' ? <MembersLean onNavigate={go} user={user} onLogin={() => go('Login')} /> : null} */}
+      {page === 'Login' ? (user ? <AccountLean user={user} onNavigate={go} onLogout={logout} onSaveFeedback={feedback} /> : <LoginLean onLogin={login} onNavigate={go} />) : null}
+      {page === 'Account' ? (user ? <AccountLean user={user} onNavigate={go} onLogout={logout} onSaveFeedback={feedback} /> : <LoginLean onLogin={login} onNavigate={go} />) : null}
+      {page === 'Join' ? <JoinLean onSubmit={submit} onNavigate={go} /> : null}
+      <SiteFooterV2 onNavigate={go} />
+      <Dialog open={dialog} title="Save your spot?" onClose={() => setDialog(false)}
+        footer={<><Button variant="ghost" onClick={() => setDialog(false)}>Never mind</Button><Button onClick={confirm}>Yes, RSVP</Button></>}>
+        <p style={{ margin: 0 }}>We'll text you a reminder the morning of the event, once the date is set.</p>
+      </Dialog>
+      {toast ? <div style={{ position: 'fixed', right: 24, bottom: 24, zIndex: 60 }}>
+        <Toast tone="success" title={toast.title} message={toast.message} onClose={() => setToast(null)} />
+      </div> : null}
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script></body></html>

@@ -1,0 +1,25 @@
+.tablist {
+  display: flex;
+  gap: var(--space-6);
+  border-bottom: var(--border-width) solid var(--border-hairline);
+}
+
+.tab {
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--text-muted);
+  padding: 0 0 12px;
+  margin-bottom: -1.5px;
+  border-bottom: 3px solid transparent;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+
+.tabActive {
+  color: var(--text-heading);
+  border-bottom-color: var(--brand-primary);
+}

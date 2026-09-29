@@ -1,0 +1,19 @@
+:root{
+--font-display:var(--font-big-shoulders),"Oswald","Arial Narrow",sans-serif;
+--font-body:var(--font-karla),"Helvetica Neue",Arial,sans-serif;
+--font-mono:ui-monospace,"SFMono-Regular","Menlo",monospace;
+
+--weight-body:400;--weight-medium:500;--weight-bold:700;--weight-display:800;--weight-display-black:900;
+
+/* Display scale — Big Shoulders, tight leading, slight negative tracking */
+--text-display-1:clamp(56px,8vw,112px);
+--text-display-2:clamp(44px,6vw,80px);
+--text-display-3:clamp(34px,4vw,56px);
+--text-h1:40px;--text-h2:30px;--text-h3:23px;--text-h4:19px;
+--text-body-lg:18px;--text-body:16px;--text-body-sm:14px;--text-caption:12.5px;
+--text-eyebrow-size:13px;
+
+--leading-display:0.92;--leading-heading:1.08;--leading-body:1.55;--leading-tight:1.3;
+--tracking-display:-0.01em;--tracking-heading:0;--tracking-body:0;
+--tracking-eyebrow:0.16em;--tracking-mono:0.08em;
+}

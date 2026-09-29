@@ -1,0 +1,120 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: 18px var(--space-8);
+  background: var(--surface-page);
+  border-bottom: var(--border-width) solid var(--border-hairline);
+}
+
+.headerInverse {
+  background: var(--surface-brand);
+  border-bottom: none;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 21px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-heading);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.brandInverse {
+  color: var(--white);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.navLink {
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14.5px;
+  color: var(--text-body);
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navLinkActive {
+  font-weight: 700;
+  color: var(--text-heading);
+  border-bottom-color: var(--brand-primary);
+}
+
+.navLinkInverse {
+  color: var(--white);
+}
+
+.navLinkInverse.navLinkActive {
+  border-bottom-color: var(--yellow-500);
+}
+
+.navItem {
+  position: relative;
+  display: inline-flex;
+}
+
+.chevron {
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.menuAnchor {
+  position: absolute;
+  top: 100%;
+  left: -12px;
+  padding-top: 10px;
+  z-index: 40;
+}
+
+.menu {
+  min-width: 176px;
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuItem {
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14.5px;
+  color: var(--text-heading);
+}
+
+.menuItemActive {
+  background: var(--surface-brand-soft);
+  font-weight: 700;
+}

@@ -1,0 +1,35 @@
+.card {
+  border-radius: var(--radius-card);
+}
+
+.plain {
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-hairline);
+  box-shadow: var(--shadow-sm);
+}
+
+.poster {
+  background: var(--surface-card);
+  border: var(--border-width-strong) solid var(--border-strong);
+  box-shadow: var(--shadow-offset);
+}
+
+.sunken {
+  background: var(--surface-sunken);
+  border: var(--border-width) solid transparent;
+  box-shadow: none;
+}
+
+.brand {
+  background: var(--surface-brand);
+  border: none;
+  color: var(--text-on-brand);
+  box-shadow: none;
+}
+
+.accent {
+  background: var(--surface-accent);
+  border: none;
+  color: var(--text-on-accent);
+  box-shadow: none;
+}

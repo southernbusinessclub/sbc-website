@@ -1,0 +1,50 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--text-heading);
+}
+
+.fieldWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select {
+  appearance: none;
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-heading);
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-hairline);
+  border-radius: var(--radius-control);
+  padding: 11px 38px 11px 12px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+
+.select:focus {
+  border-color: var(--border-brand);
+}
+
+.chevron {
+  position: absolute;
+  right: 12px;
+  color: var(--text-muted);
+  pointer-events: none;
+  display: inline-flex;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--text-muted);
+}

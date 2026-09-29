@@ -1,0 +1,54 @@
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.label:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.track {
+  flex: none;
+  width: 44px;
+  height: 26px;
+  border-radius: var(--radius-pill);
+  background: var(--paper-3);
+  padding: 3px;
+  display: inline-flex;
+  transition: background var(--dur-base) var(--ease-standard);
+}
+
+.trackOn {
+  background: var(--brand-primary);
+}
+
+.thumb {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(0);
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+
+.thumbOn {
+  transform: translateX(18px);
+}
+
+.text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-heading);
+}

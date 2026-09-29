@@ -1,0 +1,41 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1;
+  padding: 7px 13px;
+  border-radius: var(--radius-pill);
+  border: var(--border-width) solid var(--border-hairline);
+  background: var(--surface-card);
+  color: var(--text-body);
+  transition:
+    background var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard);
+}
+
+.interactive {
+  cursor: pointer;
+}
+
+.interactive:hover:not(.selected) {
+  background: var(--paper-2);
+}
+
+.selected {
+  border-color: var(--green-500);
+  background: var(--surface-brand-soft);
+  color: var(--green-700);
+}
+
+.remove {
+  display: inline-flex;
+  cursor: pointer;
+  opacity: 0.6;
+  border: none;
+  background: none;
+  padding: 0;
+  color: inherit;
+}
