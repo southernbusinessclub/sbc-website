@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { cx } from "@/lib/cx";

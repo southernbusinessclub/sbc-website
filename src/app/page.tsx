@@ -1,132 +1,182 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  Checkbox,
-  Dialog,
-  EventCard,
-  IconButton,
-  Input,
-  NavBar,
-  Radio,
-  Select,
-  Switch,
-  Tabs,
-  Tag,
-  Textarea,
-  Toast,
-  Tooltip,
-} from "@/components/ui";
+import { Badge, Button, Card, Dialog, Icon, type IconName } from "@/components/ui";
+import { Section } from "@/components/site/Section";
+import { ToastViewport } from "@/components/site/ToastViewport";
+import { useToast } from "@/lib/useToast";
+import styles from "./home.module.css";
 
-export default function ComponentPreviewPage() {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [tab, setTab] = useState("Upcoming");
-  const [switchOn, setSwitchOn] = useState(true);
-  const [checked, setChecked] = useState(true);
-  const [radio, setRadio] = useState("a");
+const PILLARS: Array<{ icon: IconName; title: string; body: string }> = [
+  {
+    icon: "calendar-days",
+    title: "Events",
+    body: "Mixers, service projects, fundraisers, and the one night everyone dresses up. This is where the memories come from.",
+  },
+  {
+    icon: "briefcase",
+    title: "Professional development",
+    body: "Headshots, mock interviews, and practice at the things you will be judged on later — before it counts.",
+  },
+  {
+    icon: "users",
+    title: "The member community",
+    body: "Forty-plus people who want to build something, and officers who will introduce you to any of them.",
+  },
+];
+
+const PLANNED_EVENTS: Array<{ title: string; body: string; when: string; tone?: "brand" | "accent" | "neutral" }> = [
+  {
+    title: "Meet your officers",
+    body: "Pop in, say hi, grab a snack. Ruth McKee School of Business, 5:30 PM.",
+    when: "Sep 24",
+    tone: "accent",
+  },
+  {
+    title: "Vespers at the Schnells",
+    body: "Rice bowls, yard games, worship from Professor Bellino, and worship credit.",
+    when: "Oct 2",
+    tone: "accent",
+  },
+  { title: "Taco Bell Black Tie", body: "Formalwear, fast food, and the group photo.", when: "Date TBA" },
+  { title: "Headshot night", body: "Ten minutes each, edited shots back within the week.", when: "Date TBA" },
+];
+
+const STATS: Array<[string, string]> = [
+  ["40+", "members"],
+  ["8", "officers"],
+  ["$10", "for the whole year"],
+  ["1", "black-tie taco night"],
+];
+
+export default function HomePage() {
+  const [rsvpOpen, setRsvpOpen] = useState(false);
+  const { toast, show, hide } = useToast();
+
+  const confirmRsvp = () => {
+    setRsvpOpen(false);
+    show({ title: "You are on the list", message: "We will text you when the date is locked in." });
+  };
 
   return (
-    <div style={{ padding: 40, display: "flex", flexDirection: "column", gap: 32 }}>
-      <NavBar
-        brand="Southern Business Club"
-        links={["Home", "Events", "Workshops"]}
-        active="Home"
-        action={
-          <div style={{ display: "flex", gap: 8 }}>
-            <Button variant="ghost" size="sm">Log in</Button>
-            <Button size="sm">Join the club</Button>
+    <div>
+      <section className={styles.hero}>
+        <div className={styles.heroInner}>
+          <div>
+            <div className={styles.heroEyebrow}>Southern Adventist University</div>
+            <h1 className={styles.heroTitle}>
+              Business,
+              <br />
+              but fun
+            </h1>
+            <p className={styles.heroBody}>
+              We run the networking nights, the interview prep, and the one black-tie dinner on campus served out of
+              a Taco Bell bag. Everyone&apos;s welcome — majors optional.
+            </p>
+            <div className={styles.heroCtas}>
+              <Button as="a" href="/join" variant="secondary" size="lg">
+                Become a member
+              </Button>
+              <Button as="a" href="/events" variant="inverse" size="lg" iconAfter="arrow-right">
+                See what&apos;s coming up
+              </Button>
+            </div>
           </div>
-        }
-      />
-
-      <section style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <Button>Primary</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="outline">Outline</Button>
-        <Button variant="ghost">Ghost</Button>
-        <Button variant="inverse" style={{ background: "var(--green-500)" }}>Inverse</Button>
-        <Button icon="mail">With icon</Button>
-        <Button as="a" href="/events" iconAfter="arrow-right">As link</Button>
+          <div className={styles.signatureCard}>
+            <div className={styles.signatureEyebrow}>Signature event · Date TBA</div>
+            <div className={styles.signatureTitle}>
+              Taco Bell
+              <br />
+              Black Tie
+            </div>
+            <p className={styles.signatureBody}>Formalwear. Fast food. Free for members.</p>
+            <Button variant="outline" onClick={() => setRsvpOpen(true)}>
+              Get notified
+            </Button>
+          </div>
+        </div>
       </section>
 
-      <section style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-        <Card style={{ width: 240 }}>Plain card</Card>
-        <Card variant="poster" style={{ width: 240 }}>Poster card</Card>
-        <Card variant="sunken" style={{ width: 240 }}>Sunken card</Card>
-        <Card variant="brand" style={{ width: 240 }}>Brand card</Card>
-        <Card variant="accent" style={{ width: 240 }}>Accent card</Card>
+      <Section eyebrow="What we do" title="Three things, done well">
+        <p className={styles.introText}>
+          We exist to help students grow a network, make memories with friends, and walk into a career ready.
+          Everything we run comes back to one of those.
+        </p>
+        <div className={styles.pillarGrid}>
+          {PILLARS.map((p) => (
+            <Card key={p.title}>
+              <span className={styles.pillarIcon}>
+                <Icon name={p.icon} size={22} />
+              </span>
+              <h3 className={styles.pillarTitle}>{p.title}</h3>
+              <p className={styles.pillarBody}>{p.body}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section eyebrow="Calendar" title="What we're planning" className={styles.planningSection} style={{ paddingTop: 64 }}>
+        <div className={styles.planningGrid}>
+          {PLANNED_EVENTS.map((e) => (
+            <Card key={e.title}>
+              <Badge tone={e.tone ?? "neutral"}>{e.when}</Badge>
+              <h3 className={styles.planningTitle}>{e.title}</h3>
+              <p className={styles.planningBody}>{e.body}</p>
+            </Card>
+          ))}
+        </div>
+        <div className={styles.planningFooter}>
+          <Button as="a" href="/events" variant="outline" iconAfter="arrow-right">
+            Full calendar
+          </Button>
+          <span className={styles.planningNote}>
+            Most events are in the Ruth McKee School of Business. Dates go up as soon as the officers lock them in.
+          </span>
+        </div>
+      </Section>
+
+      <section className={styles.statsSection}>
+        <div className={styles.statsGrid}>
+          {STATS.map(([n, l]) => (
+            <div key={l} className={styles.stat}>
+              <div className={styles.statNumber}>{n}</div>
+              <div className={styles.statLabel}>{l}</div>
+            </div>
+          ))}
+        </div>
       </section>
 
-      <section style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <Badge tone="brand">Brand</Badge>
-        <Badge tone="accent">Accent</Badge>
-        <Badge tone="success">Success</Badge>
-        <Badge tone="warning">Warning</Badge>
-        <Badge tone="danger">Danger</Badge>
-        <Badge tone="neutral">Neutral</Badge>
-        <Badge tone="solid" icon="badge-check">Solid</Badge>
-      </section>
-
-      <section style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <Tag selected>Networking</Tag>
-        <Tag>Workshops</Tag>
-        <Tag onRemove={() => {}}>Removable</Tag>
-      </section>
-
-      <section style={{ display: "flex", gap: 8 }}>
-        <IconButton icon="search" label="Search" />
-        <IconButton icon="download" label="Download" variant="solid" />
-        <Tooltip label="Add to calendar">
-          <IconButton icon="calendar-plus" label="Add to calendar" variant="ghost" />
-        </Tooltip>
-      </section>
-
-      <section style={{ maxWidth: 480 }}>
-        <EventCard
-          title="Meet your officers"
-          date={{ month: "Sep", day: 24 }}
-          time="Thursday, 5:30 PM"
-          location="Ruth McKee School of Business"
-          description="Pop in, say hi, grab a snack. No program, no commitment."
-          category="Social"
-          onRsvp={() => setDialogOpen(true)}
-        />
-      </section>
-
-      <section style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 360 }}>
-        <Input label="Southern email" icon="mail" placeholder="you@southern.edu" />
-        <Select label="Class standing" options={["Freshman", "Sophomore", "Junior", "Senior"]} />
-        <Textarea label="Notes" placeholder="Optional" />
-        <Checkbox label="Text me reminders" checked={checked} onChange={() => setChecked(!checked)} />
-        <Radio label="Option A" name="r" checked={radio === "a"} onChange={() => setRadio("a")} />
-        <Radio label="Option B" name="r" checked={radio === "b"} onChange={() => setRadio("b")} />
-        <Switch label="Show on directory" checked={switchOn} onChange={() => setSwitchOn(!switchOn)} />
-      </section>
-
-      <section>
-        <Tabs tabs={["Upcoming", "Past"]} value={tab} onChange={setTab} />
-      </section>
-
-      <section>
-        <Toast title="You are on the list" message="We will text you when the date is locked in." />
+      <section className={styles.ctaSection}>
+        <div className={styles.ctaBanner}>
+          <div>
+            <h2 className={styles.ctaTitle}>Dues are $10 for the year</h2>
+            <p className={styles.ctaBody}>
+              Every event, free headshots, mock interviews, and a free seat at the member dinners.
+            </p>
+          </div>
+          <Button as="a" href="/join" variant="secondary" size="lg">
+            Sign me up
+          </Button>
+        </div>
       </section>
 
       <Dialog
-        open={dialogOpen}
+        open={rsvpOpen}
         title="Save your spot?"
-        onClose={() => setDialogOpen(false)}
+        onClose={() => setRsvpOpen(false)}
         footer={
           <>
-            <Button variant="ghost" onClick={() => setDialogOpen(false)}>Never mind</Button>
-            <Button onClick={() => setDialogOpen(false)}>RSVP</Button>
+            <Button variant="ghost" onClick={() => setRsvpOpen(false)}>
+              Never mind
+            </Button>
+            <Button onClick={confirmRsvp}>RSVP</Button>
           </>
         }
       >
-        You will get a text reminder the morning of the event.
+        We&apos;ll text you the details for Taco Bell Black Tie as soon as the date is locked in.
       </Dialog>
+
+      <ToastViewport toast={toast} onClose={hide} />
     </div>
   );
 }

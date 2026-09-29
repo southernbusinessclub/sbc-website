@@ -1,0 +1,19 @@
+.section {
+  padding: 72px 32px;
+}
+
+.inner {
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 44px;
+  text-transform: uppercase;
+  font-weight: 900;
+  line-height: 0.95;
+  margin-bottom: 28px;
+}
