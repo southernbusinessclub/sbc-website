@@ -1,0 +1,260 @@
+.section {
+  padding: 56px 32px 84px;
+}
+
+.grid {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.title {
+  font-size: 72px;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+  margin: 12px 0 12px;
+}
+
+.lede {
+  font-size: 18px;
+  max-width: 520px;
+  margin-bottom: 16px;
+}
+
+.claimNudge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  border-left: 5px solid var(--yellow-500);
+  max-width: 520px;
+}
+
+.claimNudgeIcon {
+  color: var(--green-700);
+  display: inline-flex;
+}
+
+.claimNudgeText {
+  font-size: 14.5px;
+  color: var(--text-body);
+}
+
+.claimNudgeText a {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.spanFull {
+  grid-column: 1 / -1;
+}
+
+.interestsBlock {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1.5px solid var(--border-hairline);
+}
+
+.interestsLabel {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13.5px;
+  margin-bottom: 12px;
+  color: var(--text-heading);
+}
+
+.interestsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.switches {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.submitRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.submitNote {
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.formError {
+  font-size: 13.5px;
+  color: var(--red-600);
+  margin-top: 12px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 96px;
+}
+
+.benefitsEyebrow {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--yellow-500);
+}
+
+.benefitsList {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  font-size: 15px;
+}
+
+.benefitsItem {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.benefitsCheck {
+  color: var(--yellow-500);
+  display: inline-flex;
+  margin-top: 2px;
+}
+
+.duesTitle {
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin: 12px 0 10px;
+}
+
+.duesSteps {
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14.5px;
+  color: var(--text-muted);
+}
+
+.duesStep {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.duesStepNumber {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--surface-brand-soft);
+  color: var(--green-700);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.treasurerRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  margin-bottom: 14px;
+}
+
+.treasurerIcon {
+  color: var(--green-700);
+  display: inline-flex;
+}
+
+.treasurerName {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-heading);
+}
+
+.treasurerRole {
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.posterTitle {
+  font-size: 26px;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin: 12px 0 8px;
+}
+
+.posterBody {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.successTitle {
+  font-size: 32px;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin: 12px 0 10px;
+}
+
+.successBody {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin: 0 0 20px;
+  max-width: 480px;
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .title {
+    font-size: 48px;
+  }
+}

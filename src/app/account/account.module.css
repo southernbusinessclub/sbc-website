@@ -1,0 +1,331 @@
+.hero {
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+  padding: 52px 32px 56px;
+}
+
+.heroInner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.heroTop {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  flex: none;
+  width: 78px;
+  height: 78px;
+  border-radius: var(--radius-lg);
+  background: var(--yellow-500);
+  color: var(--ink-900);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroMeta {
+  flex: 1;
+  min-width: 240px;
+}
+
+.heroEyebrow {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--yellow-500);
+}
+
+.heroName {
+  font-size: 60px;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+  color: var(--white);
+  margin: 8px 0 8px;
+}
+
+.heroDetail {
+  font-size: 16px;
+  opacity: 0.92;
+}
+
+.heroPaidBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--yellow-500);
+  color: var(--ink-900);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.heroActions {
+  display: flex;
+  gap: 10px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 38px;
+}
+
+.statCard {
+  background: rgba(246, 243, 237, 0.1);
+  border: 1px solid rgba(246, 243, 237, 0.18);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+
+.statIcon {
+  color: var(--yellow-500);
+  display: inline-flex;
+  margin-bottom: 10px;
+}
+
+.statNumber {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 46px;
+  line-height: 0.9;
+  color: var(--white);
+}
+
+.statLabel {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin-top: 6px;
+}
+
+.duesBannerSection {
+  padding: 24px 32px 0;
+}
+
+.duesBannerInner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.duesBanner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  border-left: 6px solid var(--yellow-500);
+}
+
+.duesBannerIcon {
+  color: var(--green-700);
+  display: inline-flex;
+}
+
+.duesBannerText {
+  flex: 1;
+  min-width: 260px;
+}
+
+.duesBannerTitle {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text-heading);
+}
+
+.duesBannerBody {
+  font-size: 14.5px;
+  color: var(--text-muted);
+}
+
+.main {
+  padding: 56px 32px 80px;
+}
+
+.mainInner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.9fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.blockTitle {
+  font-size: 40px;
+  text-transform: uppercase;
+  font-weight: 900;
+  line-height: 0.95;
+  margin-bottom: 6px;
+}
+
+.blockBody {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+  max-width: 520px;
+}
+
+.savingsRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1.5px solid var(--border-hairline);
+}
+
+.savingsIcon {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--surface-brand-soft);
+  color: var(--green-700);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.savingsLabel {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15.5px;
+  color: var(--text-heading);
+}
+
+.savingsDetail {
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.savingsAmount {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  color: var(--text-heading);
+}
+
+.savingsTotal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 20px;
+  background: var(--surface-accent);
+  color: var(--text-on-accent);
+}
+
+.savingsTotalLabel {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.savingsTotalAmount {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 42px;
+  line-height: 0.9;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 96px;
+}
+
+.duesCardLabel {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--yellow-500);
+}
+
+.duesCardValue {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 52px;
+  line-height: 0.92;
+  color: var(--white);
+  margin: 10px 0 8px;
+}
+
+.duesCardBody {
+  font-size: 14.5px;
+  margin: 0 0 16px;
+  opacity: 0.92;
+}
+
+.sideCardTitle {
+  font-size: 22px;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin: 12px 0 8px;
+}
+
+.sideCardBody {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  margin: 0 0 14px;
+}
+
+.settingsSwitches {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.settingsActions {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1.5px solid var(--border-hairline);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 860px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mainInner {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .heroName {
+    font-size: 42px;
+  }
+}

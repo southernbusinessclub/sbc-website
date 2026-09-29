@@ -29,6 +29,7 @@ export interface Database {
           member_since: string;
         };
         Update: Partial<Database["public"]["Tables"]["members"]["Row"]>;
+        Relationships: [];
       };
       dues: {
         Row: {
@@ -44,6 +45,7 @@ export interface Database {
           school_year: string;
         };
         Update: Partial<Database["public"]["Tables"]["dues"]["Row"]>;
+        Relationships: [];
       };
       join_requests: {
         Row: {
@@ -70,6 +72,7 @@ export interface Database {
           email: string;
         };
         Update: Partial<Database["public"]["Tables"]["join_requests"]["Row"]>;
+        Relationships: [];
       };
       events: {
         Row: {
@@ -83,10 +86,12 @@ export interface Database {
           topic: string | null;
           is_signature: boolean;
           published: boolean;
+          member_value_usd: number | null;
           created_at: string;
         };
         Insert: Partial<Database["public"]["Tables"]["events"]["Row"]> & { title: string };
         Update: Partial<Database["public"]["Tables"]["events"]["Row"]>;
+        Relationships: [];
       };
       rsvps: {
         Row: {
@@ -100,6 +105,7 @@ export interface Database {
           member_id: string;
         };
         Update: Partial<Database["public"]["Tables"]["rsvps"]["Row"]>;
+        Relationships: [];
       };
       event_feedback: {
         Row: {
@@ -116,8 +122,10 @@ export interface Database {
           member_id: string;
         };
         Update: Partial<Database["public"]["Tables"]["event_feedback"]["Row"]>;
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
     Functions: {
       is_officer: { Args: Record<string, never>; Returns: boolean };
       current_member_id: { Args: Record<string, never>; Returns: string | null };

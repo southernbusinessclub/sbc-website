@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button, IconButton, NavBar } from "@/components/ui";
 import { cx } from "@/lib/cx";
+import { createClient } from "@/lib/supabase/client";
 import type { SiteUser } from "@/lib/types";
 import styles from "./SiteHeader.module.css";
 
@@ -41,6 +42,14 @@ export function SiteHeader({ user }: SiteHeaderProps) {
     router.push(PATH_BY_ID[id] ?? "/");
   };
 
+  const handleLogout = async () => {
+    setMobileOpen(false);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  };
+
   const signedInActions = (
     <div className={styles.actions}>
       {user?.officer ? (
@@ -48,7 +57,7 @@ export function SiteHeader({ user }: SiteHeaderProps) {
           Admin
         </Button>
       ) : null}
-      <Button variant="ghost" size="sm" onClick={() => navigate("Login")}>
+      <Button variant="ghost" size="sm" onClick={handleLogout}>
         Log out
       </Button>
       <Button size="sm" onClick={() => navigate("Account")}>
@@ -117,7 +126,7 @@ export function SiteHeader({ user }: SiteHeaderProps) {
                 <Button full onClick={() => navigate("Account")}>
                   My account
                 </Button>
-                <Button variant="ghost" full onClick={() => navigate("Login")}>
+                <Button variant="ghost" full onClick={handleLogout}>
                   Log out
                 </Button>
               </>

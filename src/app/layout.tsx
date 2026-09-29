@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Big_Shoulders, Karla } from "next/font/google";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteHeader } from "@/components/site/SiteHeader";
+import { getSiteUser } from "@/lib/get-site-user";
 import "./globals.css";
 
 // Google Fonts merged "Big Shoulders Display" into the single variable "Big Shoulders"
@@ -27,10 +28,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  // TODO(step 4): resolve the signed-in member/officer from the Supabase session
-  // server-side here instead of hardcoding a signed-out header.
-  const user = null;
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const user = await getSiteUser();
 
   return (
     <html lang="en" className={`${bigShouldersDisplay.variable} ${karla.variable}`}>
