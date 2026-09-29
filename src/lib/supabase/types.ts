@@ -154,6 +154,14 @@ export interface Database {
         };
         Returns: Database["public"]["Tables"]["members"]["Row"];
       };
+      approve_join_request: {
+        Args: { request_id: string };
+        Returns: Database["public"]["Tables"]["members"]["Row"];
+      };
+      decline_join_request: {
+        Args: { request_id: string };
+        Returns: undefined;
+      };
     };
   };
 }
