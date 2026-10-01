@@ -20,6 +20,61 @@ export interface RosterRow {
 
 const FILTERS = ["Everyone", "Dues unpaid", "Dues paid", "Officers"] as const;
 
+function OfficerRoleCell({
+  member,
+  isSelf,
+  onSaved,
+  onNotify,
+}: {
+  member: RosterRow;
+  isSelf: boolean;
+  onSaved: (role: string | null) => void;
+  onNotify: (t: { title: string; message: string }) => void;
+}) {
+  const [value, setValue] = useState(member.officerRole ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    const next = value.trim() || null;
+    if (next === (member.officerRole ?? null)) return;
+    if (isSelf && next === null) {
+      setValue(member.officerRole ?? "");
+      onNotify({
+        title: "Can't remove your own access",
+        message: "Have another officer do it, or edit it directly in Supabase, so you don't lock yourself out.",
+      });
+      return;
+    }
+    setSaving(true);
+    const supabase = createClient();
+    const { error } = await supabase.from("members").update({ officer_role: next }).eq("id", member.id);
+    setSaving(false);
+    if (error) {
+      setValue(member.officerRole ?? "");
+      onNotify({ title: "Couldn't update officer role", message: error.message });
+      return;
+    }
+    onSaved(next);
+    onNotify({
+      title: next ? "Officer role set" : "Officer role removed",
+      message: next ? `${member.name} is now listed as ${next}.` : `${member.name} is no longer an officer.`,
+    });
+  };
+
+  return (
+    <Input
+      placeholder="Not an officer"
+      value={value}
+      disabled={saving}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={save}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") e.currentTarget.blur();
+      }}
+    />
+  );
+}
+
 function toCsv(rows: RosterRow[]): string {
   const header = ["Name", "Email", "Standing", "Major", "Member since", "Officer role", "Dues paid", "Events"];
   const lines = rows.map((r) =>
@@ -138,6 +193,7 @@ export function RosterTab({
               <th className={styles.th}>Standing</th>
               <th className={styles.th}>Member since</th>
               <th className={styles.th}>Events</th>
+              <th className={styles.th}>Officer role</th>
               <th className={`${styles.th} ${styles.thRight}`}>Dues paid</th>
             </tr>
           </thead>
@@ -156,6 +212,16 @@ export function RosterTab({
                 <td className={`${styles.td} ${styles.tdMuted}`}>{m.standing ?? "—"}</td>
                 <td className={`${styles.td} ${styles.tdMuted}`}>{m.memberSince}</td>
                 <td className={`${styles.td} ${styles.tdMuted}`}>{m.eventsCount}</td>
+                <td className={styles.td} style={{ minWidth: 160 }}>
+                  <OfficerRoleCell
+                    member={m}
+                    isSelf={m.id === officerId}
+                    onNotify={onNotify}
+                    onSaved={(role) =>
+                      setRoster((r) => r.map((row) => (row.id === m.id ? { ...row, officerRole: role } : row)))
+                    }
+                  />
+                </td>
                 <td className={`${styles.td} ${styles.tdRight}`}>
                   <span className={styles.duesCell}>
                     {!m.duesPaid ? <Badge tone="warning">Owes $10</Badge> : null}
@@ -166,7 +232,7 @@ export function RosterTab({
             ))}
             {shown.length === 0 ? (
               <tr>
-                <td className={`${styles.td} ${styles.tdMuted}`} colSpan={5}>
+                <td className={`${styles.td} ${styles.tdMuted}`} colSpan={6}>
                   Nobody matches that.
                 </td>
               </tr>
