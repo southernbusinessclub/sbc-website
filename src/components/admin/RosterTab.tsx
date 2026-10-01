@@ -75,10 +75,64 @@ function OfficerRoleCell({
   );
 }
 
+function MemberSinceCell({
+  member,
+  onSaved,
+  onNotify,
+}: {
+  member: RosterRow;
+  onSaved: (memberSince: string) => void;
+  onNotify: (t: { title: string; message: string }) => void;
+}) {
+  const [value, setValue] = useState(member.memberSince);
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    const next = value.trim();
+    if (!next || next === member.memberSince) {
+      setValue(member.memberSince);
+      return;
+    }
+    setSaving(true);
+    const supabase = createClient();
+    const { error } = await supabase.from("members").update({ member_since: next }).eq("id", member.id);
+    setSaving(false);
+    if (error) {
+      setValue(member.memberSince);
+      onNotify({ title: "Couldn't update member since", message: error.message });
+      return;
+    }
+    onSaved(next);
+    onNotify({ title: "Updated", message: `${member.name} now shows as a member since ${next}.` });
+  };
+
+  return (
+    <Input
+      value={value}
+      disabled={saving}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={save}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") e.currentTarget.blur();
+      }}
+      style={{ maxWidth: 90 }}
+    />
+  );
+}
+
 function toCsv(rows: RosterRow[]): string {
   const header = ["Name", "Email", "Standing", "Major", "Member since", "Officer role", "Dues paid", "Events"];
   const lines = rows.map((r) =>
-    [r.name, r.email, r.standing ?? "", r.major ?? "", r.memberSince, r.officerRole ?? "", r.duesPaid ? "Yes" : "No", r.eventsCount]
+    [
+      r.name,
+      r.email,
+      r.standing ?? "",
+      r.major ?? "",
+      r.memberSince,
+      r.officerRole ?? "",
+      r.officerRole ? "Exempt" : r.duesPaid ? "Yes" : "No",
+      r.eventsCount,
+    ]
       .map((v) => `"${String(v).replace(/"/g, '""')}"`)
       .join(","),
   );
@@ -100,18 +154,21 @@ export function RosterTab({
 
   const shown = roster.filter((m) => {
     const hit = `${m.name}${m.email}${m.major ?? ""}`.toLowerCase().includes(q.toLowerCase());
+    const owesDues = !m.officerRole && !m.duesPaid;
     const pass =
       filter === "Everyone"
         ? true
         : filter === "Dues unpaid"
-          ? !m.duesPaid
+          ? owesDues
           : filter === "Dues paid"
-            ? m.duesPaid
+            ? !m.officerRole && m.duesPaid
             : Boolean(m.officerRole);
     return hit && pass;
   });
 
-  const unpaid = roster.filter((m) => !m.duesPaid).length;
+  // Officers don't pay dues, so they're excluded from both counts below.
+  const payingMembers = roster.filter((m) => !m.officerRole);
+  const unpaid = payingMembers.filter((m) => !m.duesPaid).length;
 
   const toggleDues = async (member: RosterRow) => {
     const next = !member.duesPaid;
@@ -159,7 +216,7 @@ export function RosterTab({
         </div>
         <div>
           <div className={styles.statLabel}>Collected</div>
-          <div className={styles.statValue}>${(roster.length - unpaid) * 10}</div>
+          <div className={styles.statValue}>${(payingMembers.length - unpaid) * 10}</div>
           <div className={styles.statNote}>At $10 a head, this year</div>
         </div>
       </div>
@@ -210,7 +267,15 @@ export function RosterTab({
                   </div>
                 </td>
                 <td className={`${styles.td} ${styles.tdMuted}`}>{m.standing ?? "—"}</td>
-                <td className={`${styles.td} ${styles.tdMuted}`}>{m.memberSince}</td>
+                <td className={styles.td}>
+                  <MemberSinceCell
+                    member={m}
+                    onNotify={onNotify}
+                    onSaved={(memberSince) =>
+                      setRoster((r) => r.map((row) => (row.id === m.id ? { ...row, memberSince } : row)))
+                    }
+                  />
+                </td>
                 <td className={`${styles.td} ${styles.tdMuted}`}>{m.eventsCount}</td>
                 <td className={styles.td} style={{ minWidth: 160 }}>
                   <OfficerRoleCell
@@ -223,10 +288,16 @@ export function RosterTab({
                   />
                 </td>
                 <td className={`${styles.td} ${styles.tdRight}`}>
-                  <span className={styles.duesCell}>
-                    {!m.duesPaid ? <Badge tone="warning">Owes $10</Badge> : null}
-                    <Switch checked={m.duesPaid} onChange={() => toggleDues(m)} />
-                  </span>
+                  {m.officerRole ? (
+                    <span className={styles.duesCell}>
+                      <Badge tone="neutral">Exempt</Badge>
+                    </span>
+                  ) : (
+                    <span className={styles.duesCell}>
+                      {!m.duesPaid ? <Badge tone="warning">Owes $10</Badge> : null}
+                      <Switch checked={m.duesPaid} onChange={() => toggleDues(m)} />
+                    </span>
+                  )}
                 </td>
               </tr>
             ))}

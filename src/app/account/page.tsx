@@ -64,7 +64,8 @@ export default async function AccountPage() {
     .eq("member_id", member.id)
     .eq("school_year", CURRENT_SCHOOL_YEAR)
     .maybeSingle();
-  const paid = dues?.paid ?? false;
+  // Officers don't pay dues.
+  const paid = Boolean(member.officer_role) || (dues?.paid ?? false);
 
   const { data: rsvpRows } = await supabase.from("rsvps").select("event_id").eq("member_id", member.id);
   const rsvpEventIds = (rsvpRows ?? []).map((r) => r.event_id);
