@@ -15,8 +15,7 @@ import {
   Textarea,
 } from "@/components/ui";
 import { TREASURER } from "@/lib/school-year";
-import { isSupabaseConfigured } from "@/lib/supabase/is-configured";
-import { createClient } from "@/lib/supabase/client";
+import { submitJoinRequest } from "./actions";
 import styles from "./join.module.css";
 
 const BENEFITS = [
@@ -56,47 +55,25 @@ export default function JoinPage() {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    if (!/^[a-z0-9._%+-]+@southern\.edu$/i.test(email)) {
-      setError("Use your @southern.edu email address.");
-      return;
-    }
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
-      return;
-    }
-    if (!isSupabaseConfigured()) {
-      setError("The club hasn't connected its account system yet — check back soon.");
-      return;
-    }
-
     setSubmitting(true);
-    const supabase = createClient();
 
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
-    if (signUpError || !signUpData.user) {
-      setSubmitting(false);
-      setError(signUpError?.message ?? "Something went wrong creating your account.");
-      return;
-    }
-
-    const { error: insertError } = await supabase.from("join_requests").insert({
-      user_id: signUpData.user.id,
-      first_name: first,
-      last_name: last,
+    const result = await submitJoinRequest({
+      firstName: first,
+      lastName: last,
       email,
       phone,
       standing,
       major,
+      password,
       interests: INTEREST_OPTIONS.filter((k) => interests[k]),
-      sms_opt_in: texts,
-      directory_opt_in: directory,
-      notes: notes || null,
+      smsOptIn: texts,
+      directoryOptIn: directory,
+      notes,
     });
 
     setSubmitting(false);
-    if (insertError) {
-      setError(insertError.message);
+    if (result.error) {
+      setError(result.error);
       return;
     }
 
@@ -108,12 +85,13 @@ export default function JoinPage() {
       <section className={styles.section}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
           <Badge tone="accent" icon="badge-check">
-            You&apos;re on the list
+            Check your inbox
           </Badge>
-          <h1 className={styles.successTitle}>Submitted — now pay Sarah</h1>
+          <h1 className={styles.successTitle}>Confirm your email, then pay Sarah</h1>
           <p className={styles.successBody}>
-            An officer will add you to the roster shortly. Go ahead and hand Sarah $10 cash at any event, or text her
-            to meet up, so your dues are ready to record the moment you&apos;re added.
+            We sent a confirmation link to your Southern email — click it to activate your login. An officer will
+            add you to the roster shortly after. Go ahead and hand Sarah $10 cash at any event, or text her to meet
+            up, so your dues are ready to record the moment you&apos;re added.
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <Button as="a" href={smsHref} iconAfter="arrow-right" style={{ textDecoration: "none" }}>

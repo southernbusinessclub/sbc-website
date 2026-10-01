@@ -35,7 +35,11 @@ export default function LoginPage() {
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
     setSubmitting(false);
     if (signInError) {
-      setError("That email and password combination didn't work.");
+      setError(
+        signInError.message.toLowerCase().includes("confirm")
+          ? "Click the confirmation link we emailed you when you joined before logging in."
+          : "That email and password combination didn't work.",
+      );
       return;
     }
     router.push("/account");

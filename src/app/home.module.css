@@ -45,37 +45,6 @@
   flex-wrap: wrap;
 }
 
-.signatureCard {
-  border: 2.5px solid var(--ink-900);
-  border-radius: var(--radius-lg);
-  box-shadow: 8px 8px 0 var(--ink-900);
-  background: var(--yellow-500);
-  color: var(--ink-900);
-  padding: 26px;
-}
-
-.signatureEyebrow {
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 12.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.signatureTitle {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 52px;
-  line-height: 0.9;
-  text-transform: uppercase;
-  margin: 10px 0 12px;
-}
-
-.signatureBody {
-  font-size: 15px;
-  margin: 0 0 18px;
-}
-
 .introText {
   font-size: 18.5px;
   max-width: 620px;

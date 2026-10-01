@@ -1,10 +1,7 @@
-"use client";
-
-import { useState } from "react";
-import { Badge, Button, Card, Dialog, Icon, type IconName } from "@/components/ui";
+import { Badge, Button, Card, Icon, type IconName } from "@/components/ui";
+import { HeroRsvp } from "@/components/home/HeroRsvp";
 import { Section } from "@/components/site/Section";
-import { ToastViewport } from "@/components/site/ToastViewport";
-import { useToast } from "@/lib/useToast";
+import { getPublishedEvents } from "@/lib/get-published-events";
 import styles from "./home.module.css";
 
 const PILLARS: Array<{ icon: IconName; title: string; body: string }> = [
@@ -25,23 +22,6 @@ const PILLARS: Array<{ icon: IconName; title: string; body: string }> = [
   },
 ];
 
-const PLANNED_EVENTS: Array<{ title: string; body: string; when: string; tone?: "brand" | "accent" | "neutral" }> = [
-  {
-    title: "Meet your officers",
-    body: "Pop in, say hi, grab a snack. Ruth McKee School of Business, 5:30 PM.",
-    when: "Sep 24",
-    tone: "accent",
-  },
-  {
-    title: "Vespers at the Schnells",
-    body: "Rice bowls, yard games, worship from Professor Bellino, and worship credit.",
-    when: "Oct 2",
-    tone: "accent",
-  },
-  { title: "Taco Bell Black Tie", body: "Formalwear, fast food, and the group photo.", when: "Date TBA" },
-  { title: "Headshot night", body: "Ten minutes each, edited shots back within the week.", when: "Date TBA" },
-];
-
 const STATS: Array<[string, string]> = [
   ["40+", "members"],
   ["8", "officers"],
@@ -49,14 +29,20 @@ const STATS: Array<[string, string]> = [
   ["1", "black-tie taco night"],
 ];
 
-export default function HomePage() {
-  const [rsvpOpen, setRsvpOpen] = useState(false);
-  const { toast, show, hide } = useToast();
+const MONTHS = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+] as const;
 
-  const confirmRsvp = () => {
-    setRsvpOpen(false);
-    show({ title: "You are on the list", message: "We will text you when the date is locked in." });
-  };
+function formatWhen(eventDate: string | null): string {
+  if (!eventDate) return "Date TBA";
+  const d = new Date(`${eventDate}T00:00:00`);
+  return `${MONTHS[d.getMonth()]} ${d.getDate()}`;
+}
+
+export default async function HomePage() {
+  const events = await getPublishedEvents();
+  const planned = events.slice(0, 4);
 
   return (
     <div>
@@ -82,18 +68,7 @@ export default function HomePage() {
               </Button>
             </div>
           </div>
-          <div className={styles.signatureCard}>
-            <div className={styles.signatureEyebrow}>Signature event · Date TBA</div>
-            <div className={styles.signatureTitle}>
-              Taco Bell
-              <br />
-              Black Tie
-            </div>
-            <p className={styles.signatureBody}>Formalwear. Fast food. Free for members.</p>
-            <Button variant="outline" onClick={() => setRsvpOpen(true)}>
-              Get notified
-            </Button>
-          </div>
+          <HeroRsvp />
         </div>
       </section>
 
@@ -116,15 +91,23 @@ export default function HomePage() {
       </Section>
 
       <Section eyebrow="Calendar" title="What we're planning" className={styles.planningSection} style={{ paddingTop: 64 }}>
-        <div className={styles.planningGrid}>
-          {PLANNED_EVENTS.map((e) => (
-            <Card key={e.title}>
-              <Badge tone={e.tone ?? "neutral"}>{e.when}</Badge>
-              <h3 className={styles.planningTitle}>{e.title}</h3>
-              <p className={styles.planningBody}>{e.body}</p>
-            </Card>
-          ))}
-        </div>
+        {planned.length === 0 ? (
+          <Card variant="sunken">
+            <p style={{ margin: 0, color: "var(--text-muted)" }}>
+              Nothing published yet — check back after the next officer meeting.
+            </p>
+          </Card>
+        ) : (
+          <div className={styles.planningGrid}>
+            {planned.map((e) => (
+              <Card key={e.id}>
+                <Badge tone={e.eventDate ? "accent" : "neutral"}>{formatWhen(e.eventDate)}</Badge>
+                <h3 className={styles.planningTitle}>{e.title}</h3>
+                <p className={styles.planningBody}>{e.description}</p>
+              </Card>
+            ))}
+          </div>
+        )}
         <div className={styles.planningFooter}>
           <Button as="a" href="/events" variant="outline" iconAfter="arrow-right">
             Full calendar
@@ -159,24 +142,6 @@ export default function HomePage() {
           </Button>
         </div>
       </section>
-
-      <Dialog
-        open={rsvpOpen}
-        title="Save your spot?"
-        onClose={() => setRsvpOpen(false)}
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setRsvpOpen(false)}>
-              Never mind
-            </Button>
-            <Button onClick={confirmRsvp}>RSVP</Button>
-          </>
-        }
-      >
-        We&apos;ll text you the details for Taco Bell Black Tie as soon as the date is locked in.
-      </Dialog>
-
-      <ToastViewport toast={toast} onClose={hide} />
     </div>
   );
 }
