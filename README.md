@@ -36,8 +36,10 @@ Two Auth settings matter:
 - **Custom SMTP** (Project Settings → Authentication → SMTP Settings) is
   required for real email delivery — Supabase's default sender is heavily
   rate-limited and not meant for production. This project uses
-  [Resend](https://resend.com); its sandbox domain can only email the
-  Resend account's own address until a verified sending domain is added.
+  [Resend](https://resend.com), sending from `saubusinessclub.com` (verified
+  domain — DNS records live at Cloudflare). Without a verified domain,
+  Resend's sandbox can only email the Resend account's own address, which
+  blocks real signups entirely.
 
 ### Bootstrapping the first officer
 
@@ -61,10 +63,42 @@ Every officer after that can be promoted from `/admin` → Roster → the
 
 ## Deployment
 
-Hosted on Vercel, auto-deploying from the `main` branch. Required
-environment variables (set in Vercel's Project Settings → Environment
-Variables, matching `.env.local`):
+Live at [saubusinessclub.com](https://www.saubusinessclub.com), hosted on
+Vercel, auto-deploying from the `main` branch. Required environment
+variables (set in Vercel's Project Settings → Environment Variables,
+matching `.env.local`):
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
+
+Domain is registered at Cloudflare; email sends through Resend using
+`saubusinessclub.com` as a verified sending domain. All of these — GitHub,
+Vercel, Supabase, Resend, Cloudflare — are under accounts tied to
+`businessclub@southern.edu`, not any individual officer's personal account,
+so none of it depends on one person staying involved.
+
+## Making changes
+
+**Content and club data — events, dues, officer roles, member records** —
+never need a code change. Everything in `/admin` takes effect immediately,
+live, with no deploy involved.
+
+**Actual code changes** go through Vercel's normal deploy pipeline: edit
+locally, test with `npm run dev`, then commit and push via
+[GitHub Desktop](https://desktop.github.com) (no git command line needed).
+Every push to `main` deploys to the live site **immediately** — there's no
+review gate by default.
+
+For anything beyond a trivial fix, don't push straight to `main`. Instead:
+
+1. Create a new branch in GitHub Desktop ("New Branch") instead of
+   committing on `main`.
+2. Push that branch — Vercel automatically builds a separate **Preview**
+   deployment for it, at its own throwaway URL, leaving the live site
+   untouched.
+3. Check the preview looks right, then open a Pull Request on GitHub and
+   merge it into `main` to actually go live.
+
+This costs a few extra minutes and means a mistake gets caught on a preview
+link instead of in front of real members.
