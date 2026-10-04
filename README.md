@@ -29,7 +29,7 @@ Schema, RLS policies, and seed data live in `supabase/migrations/` and
 `supabase/seed.sql`. Apply them in order through the Supabase SQL Editor (or
 the Supabase CLI once it's set up) against a new project.
 
-Two Auth settings matter:
+Three Auth settings matter:
 - **Confirm email** (Authentication → Providers → Email) must stay **on** —
   the signup flow depends on it to prevent someone creating an account with
   an email they don't control.
@@ -40,6 +40,20 @@ Two Auth settings matter:
   domain — DNS records live at Cloudflare). Without a verified domain,
   Resend's sandbox can only email the Resend account's own address, which
   blocks real signups entirely.
+- **Confirm signup email template** (Authentication → Email Templates) must
+  link to this app, not to the raw Supabase project URL. Supabase's default
+  `{{ .ConfirmationURL }}` points at `<project-ref>.supabase.co/auth/v1/verify`
+  — a domain that doesn't match the `saubusinessclub.com` sender. Mail
+  security at `@southern.edu` (and most institutional inboxes) treats a
+  from/link domain mismatch as a phishing signal and silently drops the
+  message after accepting it, which is why Resend shows "Delivered" for
+  emails officers never received. Set the template body's link to:
+  ```
+  {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup
+  ```
+  `src/app/auth/confirm/route.ts` verifies the token server-side and
+  redirects into the app, so the link a recipient sees and clicks stays on
+  `saubusinessclub.com` end to end.
 
 ### Bootstrapping the first officer
 
