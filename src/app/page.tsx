@@ -1,8 +1,15 @@
 import { Badge, Button, Card, Icon, type IconName } from "@/components/ui";
 import { HeroRsvp } from "@/components/home/HeroRsvp";
 import { Section } from "@/components/site/Section";
+import { isEventUpcoming } from "@/lib/event-dates";
 import { getPublishedEvents } from "@/lib/get-published-events";
 import styles from "./home.module.css";
+
+// getPublishedEvents() reads cookies via the server Supabase client, which
+// already forces this route to render per-request — this just makes that
+// guarantee explicit so "What we're planning" can't start showing past
+// events again from a stale prerender if that data access ever changes.
+export const dynamic = "force-dynamic";
 
 const PILLARS: Array<{ icon: IconName; title: string; body: string }> = [
   {
@@ -42,7 +49,7 @@ function formatWhen(eventDate: string | null): string {
 
 export default async function HomePage() {
   const events = await getPublishedEvents();
-  const planned = events.slice(0, 4);
+  const planned = events.filter((e) => isEventUpcoming(e.eventDate)).slice(0, 4);
 
   return (
     <div>
@@ -94,7 +101,7 @@ export default async function HomePage() {
         {planned.length === 0 ? (
           <Card variant="sunken">
             <p style={{ margin: 0, color: "var(--text-muted)" }}>
-              Nothing published yet — check back after the next officer meeting.
+              Nothing on the calendar right now — check back after the next officer meeting.
             </p>
           </Card>
         ) : (
