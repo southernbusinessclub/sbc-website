@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { Button, Card, Icon } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
@@ -10,6 +10,7 @@ import styles from "./confirm.module.css";
 type Status = "ready" | "verifying" | "success" | "already" | "invalid";
 
 export function ConfirmCard() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
@@ -23,6 +24,10 @@ export function ConfirmCard() {
     const supabase = createClient();
     const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
     if (!error) {
+      // The nav reads the session from a server component higher up the
+      // tree — without a refresh it keeps showing signed-out after this
+      // page hands off to "Go to my account" until the next full navigation.
+      router.refresh();
       setStatus("success");
       return;
     }
