@@ -228,7 +228,13 @@ export default function ClaimPage() {
               {error ? <p className={styles.formError}>{error}</p> : null}
               <p className={styles.center}>
                 Not you?{" "}
-                <span role="button" onClick={() => setStep("email")}>
+                <span
+                  role="button"
+                  onClick={() => {
+                    setEmail("");
+                    setStep("email");
+                  }}
+                >
                   Try another email
                 </span>
               </p>
@@ -299,7 +305,14 @@ export default function ClaimPage() {
                 <Button as="a" href="/join" size="lg" full style={{ textDecoration: "none" }}>
                   Join the club — $10
                 </Button>
-                <Button variant="outline" full onClick={() => setStep("email")}>
+                <Button
+                  variant="outline"
+                  full
+                  onClick={() => {
+                    setEmail("");
+                    setStep("email");
+                  }}
+                >
                   Try a different email
                 </Button>
                 <Button
