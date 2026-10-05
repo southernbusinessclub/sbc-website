@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import { Badge, Button, Card, Icon, Input } from "@/components/ui";
 import { CURRENT_SCHOOL_YEAR, TREASURER } from "@/lib/school-year";
 import { isSupabaseConfigured } from "@/lib/supabase/is-configured";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./claim.module.css";
 
-type Step = "email" | "found" | "setpw" | "notfound";
+type Step = "email" | "found" | "setpw" | "sent" | "notfound";
 
 interface RosterMatch {
   member_id: string;
@@ -22,18 +21,15 @@ interface RosterMatch {
 }
 
 export default function ClaimPage() {
-  const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [step, setStep] = useState<Step>("email");
   const [match, setMatch] = useState<RosterMatch | null>(null);
-  const [code, setCode] = useState("");
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const pwOk = pw.length >= 8 && pw === pw2 && code.trim().length >= 4;
+  const pwOk = pw.length >= 8 && pw === pw2;
 
   const lookUp = async () => {
     setError(null);
@@ -57,57 +53,25 @@ export default function ClaimPage() {
     setStep(found ? "found" : "notfound");
   };
 
-  const startSetPassword = async () => {
-    setError(null);
-    setBusy(true);
-    const supabase = createClient();
-    // shouldCreateUser must stay true (the default): a returning member has a
-    // roster row but, until now, no auth.users account of their own — this
-    // OTP is what creates it. check_roster already confirmed this email
-    // matches a real, unclaimed roster row before we ever get here.
-    const { error: otpError } = await supabase.auth.signInWithOtp({ email: email.trim() });
-    setBusy(false);
-    if (otpError) {
-      setError(otpError.message);
-      return;
-    }
-    setStep("setpw");
-  };
-
   const finishClaim = async (e: FormEvent) => {
     e.preventDefault();
     if (!pwOk) return;
     setError(null);
     setBusy(true);
 
+    // Same call Join uses — this creates only the login (auth.users), never
+    // a members or join_requests row. check_roster already confirmed this
+    // email matches a real, unclaimed roster row; /auth/confirm links the
+    // two together once this signup is confirmed.
     const supabase = createClient();
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      email: email.trim(),
-      token: code.trim(),
-      type: "email",
-    });
-    if (verifyError) {
-      setBusy(false);
-      setError("That code didn't match. Double check it and try again.");
-      return;
-    }
-
-    const { error: updateError } = await supabase.auth.updateUser({ password: pw });
-    if (updateError) {
-      setBusy(false);
-      setError(updateError.message);
-      return;
-    }
-
-    const { error: claimError } = await supabase.rpc("claim_roster", { lookup_email: email.trim() });
+    const { error: signUpError } = await supabase.auth.signUp({ email: email.trim(), password: pw });
     setBusy(false);
-    if (claimError) {
-      setError(claimError.message);
+    if (signUpError) {
+      setError(signUpError.message);
       return;
     }
 
-    router.push("/account");
-    router.refresh();
+    setStep("sent");
   };
 
   return (
@@ -222,10 +186,9 @@ export default function ClaimPage() {
                   </Button>
                 </div>
               ) : null}
-              <Button size="lg" full disabled={busy} onClick={startSetPassword}>
-                {busy ? "Sending a code…" : "That's me — set a password"}
+              <Button size="lg" full onClick={() => setStep("setpw")}>
+                That&apos;s me — set a password
               </Button>
-              {error ? <p className={styles.formError}>{error}</p> : null}
               <p className={styles.center}>
                 Not you?{" "}
                 <span
@@ -248,18 +211,11 @@ export default function ClaimPage() {
               </span>
               <h2 className={styles.stepTitle}>Set a password</h2>
               <p className={styles.stepLede}>
-                We emailed a 6-digit code to {email}, so we know it&apos;s really you. After this, you just log in
-                from the site.
+                Pick a password, then click the confirmation link we send to {email} — your history carries over
+                automatically.
               </p>
               <form onSubmit={finishClaim}>
                 <div className={styles.fields}>
-                  <Input
-                    label="Code from the email"
-                    icon="message-square"
-                    placeholder="123456"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                  />
                   <Input
                     label="New password"
                     icon="lock"
@@ -278,15 +234,25 @@ export default function ClaimPage() {
                   />
                 </div>
                 <Button type="submit" size="lg" full style={{ marginTop: 20 }} disabled={!pwOk || busy}>
-                  {busy ? "Finishing…" : "Finish and log in"}
+                  {busy ? "Sending…" : "Send confirmation link"}
                 </Button>
               </form>
               {error ? <p className={styles.formError}>{error}</p> : null}
+            </div>
+          ) : null}
+
+          {step === "sent" ? (
+            <div>
+              <span className={`${styles.stepIcon} ${styles.stepIconSetpw}`}>
+                <Icon name="mail" size={26} />
+              </span>
+              <h2 className={styles.stepTitle}>Check your email</h2>
+              <p className={styles.stepLede}>
+                We sent a confirmation link to {email}. Click it to finish claiming your account — your history
+                carries over automatically.
+              </p>
               <p className={styles.center}>
-                Didn&apos;t get the email?{" "}
-                <span role="button" onClick={startSetPassword}>
-                  Send it again
-                </span>
+                No email after a few minutes? You may already have an account. <a href="/login">Try logging in</a>.
               </p>
             </div>
           ) : null}

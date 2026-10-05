@@ -7,7 +7,7 @@ import { Button, Card, Icon } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./confirm.module.css";
 
-type Status = "ready" | "verifying" | "success" | "already" | "invalid";
+type Status = "ready" | "verifying" | "success" | "already" | "invalid" | "linkError";
 
 export function ConfirmCard() {
   const router = useRouter();
@@ -17,17 +17,41 @@ export function ConfirmCard() {
   const next = searchParams.get("next") ?? "/account";
 
   const [status, setStatus] = useState<Status>(tokenHash && type ? "ready" : "invalid");
+  const [confirmedEmail, setConfirmedEmail] = useState<string | null>(null);
+  const [linking, setLinking] = useState(false);
+
+  // No-op for a brand-new Join signup (no unclaimed roster row to find), and
+  // the only thing that links a returning Claim member's confirmed login
+  // back to their existing roster row (history, dues). See claim_roster()'s
+  // own WHERE clause for why this is safe to call unconditionally.
+  const linkRoster = async (emailToLink: string) => {
+    const supabase = createClient();
+    const { error } = await supabase.rpc("claim_roster", { lookup_email: emailToLink });
+    return !error;
+  };
 
   const confirm = async () => {
     if (!tokenHash || !type) return;
     setStatus("verifying");
     const supabase = createClient();
-    const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+    const { data, error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
     if (!error) {
       // The nav reads the session from a server component higher up the
       // tree — without a refresh it keeps showing signed-out after this
       // page hands off to "Go to my account" until the next full navigation.
       router.refresh();
+      const userEmail = data.user?.email ?? null;
+      if (type === "signup" && userEmail) {
+        setConfirmedEmail(userEmail);
+        const linked = await linkRoster(userEmail);
+        if (!linked) {
+          // A real RPC failure, not "no matching roster row" (that's just
+          // false, not an error) — staying silent here would recreate the
+          // exact stranded-member state this whole flow exists to avoid.
+          setStatus("linkError");
+          return;
+        }
+      }
       setStatus("success");
       return;
     }
@@ -35,8 +59,16 @@ export function ConfirmCard() {
     // back as the same generic error from Supabase, so the only way to tell
     // them apart is whether this browser already holds a session from
     // confirming it earlier.
-    const { data } = await supabase.auth.getUser();
-    setStatus(data.user ? "already" : "invalid");
+    const { data: userData } = await supabase.auth.getUser();
+    setStatus(userData.user ? "already" : "invalid");
+  };
+
+  const retryLink = async () => {
+    if (!confirmedEmail) return;
+    setLinking(true);
+    const linked = await linkRoster(confirmedEmail);
+    setLinking(false);
+    setStatus(linked ? "success" : "linkError");
   };
 
   return (
@@ -78,6 +110,21 @@ export function ConfirmCard() {
           <p className={styles.lede}>This account is already confirmed. Sign in to get to your member area.</p>
           <Button as="a" href="/login" size="lg" full style={{ textDecoration: "none" }}>
             Sign in
+          </Button>
+        </>
+      ) : null}
+
+      {status === "linkError" ? (
+        <>
+          <span className={`${styles.icon} ${styles.iconWarn}`}>
+            <Icon name="alert-triangle" size={26} />
+          </span>
+          <h1 className={styles.title}>Almost there</h1>
+          <p className={styles.lede}>
+            Your email is confirmed, but we couldn&apos;t link your club history. Try again.
+          </p>
+          <Button size="lg" full disabled={linking} onClick={retryLink}>
+            {linking ? "Trying…" : "Try again"}
           </Button>
         </>
       ) : null}
