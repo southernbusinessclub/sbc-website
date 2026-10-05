@@ -241,6 +241,24 @@
   max-width: 480px;
 }
 
+.resendRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 0 0 24px;
+}
+
+.resendSuccess {
+  font-size: 14px;
+  color: var(--status-success);
+}
+
+.resendError {
+  font-size: 14px;
+  color: var(--status-danger);
+}
+
 @media (max-width: 860px) {
   .grid {
     grid-template-columns: 1fr;

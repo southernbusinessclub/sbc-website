@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import Link from "next/link";
 import {
@@ -15,8 +15,11 @@ import {
   Textarea,
 } from "@/components/ui";
 import { TREASURER } from "@/lib/school-year";
+import { createClient } from "@/lib/supabase/client";
 import { submitJoinRequest } from "./actions";
 import styles from "./join.module.css";
+
+const RESEND_COOLDOWN_SECONDS = 60;
 
 const BENEFITS = [
   "An invitation to every event",
@@ -49,6 +52,39 @@ export default function JoinPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resendStatus, setResendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [resendMessage, setResendMessage] = useState<string | null>(null);
+
+  // Ticks the cooldown down one second at a time. The setState call lives in
+  // the timeout's callback, not the effect body, so this only ever runs as a
+  // reaction to the timer firing — not synchronously on every render.
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const id = setTimeout(() => setResendCooldown((s) => s - 1), 1000);
+    return () => clearTimeout(id);
+  }, [resendCooldown]);
+
+  const onResend = async () => {
+    if (resendCooldown > 0 || resendStatus === "sending") return;
+    setResendStatus("sending");
+    setResendMessage(null);
+    const supabase = createClient();
+    const { error: resendError } = await supabase.auth.resend({ type: "signup", email: email.trim() });
+    setResendCooldown(RESEND_COOLDOWN_SECONDS);
+    if (resendError) {
+      setResendStatus("error");
+      setResendMessage(
+        resendError.code === "over_email_send_rate_limit" || resendError.code === "over_request_rate_limit"
+          ? "You've asked for a few too many emails — give it a bit longer and try again."
+          : "That didn't go through. Try again in a moment.",
+      );
+      return;
+    }
+    setResendStatus("sent");
+    setResendMessage("Sent! Give it a few minutes to land.");
+  };
+
   const smsBody = `Hey Sarah! This is ${first || "________"} ${last || "__________"}. I just registered for the business club. How can I get my dues to you?`;
   const smsHref = `sms:${TREASURER.tel}?&body=${encodeURIComponent(smsBody)}`;
 
@@ -78,6 +114,7 @@ export default function JoinPage() {
     }
 
     setSubmitted(true);
+    setResendCooldown(RESEND_COOLDOWN_SECONDS);
   };
 
   if (submitted) {
@@ -89,10 +126,27 @@ export default function JoinPage() {
           </Badge>
           <h1 className={styles.successTitle}>Confirm your email, then pay Sarah</h1>
           <p className={styles.successBody}>
-            We sent a confirmation link to your Southern email — click it to activate your login. An officer will
-            add you to the roster shortly after. Go ahead and hand Sarah $10 cash at any event, or text her to meet
-            up, so your dues are ready to record the moment you&apos;re added.
+            Check your southern.edu inbox for a confirmation email from <strong>noreply@saubusinessclub.com</strong>.
+            It can take a few minutes to arrive, so check your junk or quarantine folder if you don&apos;t see it.
           </p>
+          <p className={styles.successBody}>
+            Once you click it, an officer will add you to the roster. Go ahead and hand Sarah $10 cash at any event,
+            or text her to meet up, so your dues are ready to record the moment you&apos;re added.
+          </p>
+          <div className={styles.resendRow}>
+            <Button variant="outline" size="sm" disabled={resendCooldown > 0 || resendStatus === "sending"} onClick={onResend}>
+              {resendStatus === "sending"
+                ? "Sending…"
+                : resendCooldown > 0
+                  ? `Resend email (${resendCooldown}s)`
+                  : "Resend email"}
+            </Button>
+            {resendMessage ? (
+              <span className={resendStatus === "error" ? styles.resendError : styles.resendSuccess}>
+                {resendMessage}
+              </span>
+            ) : null}
+          </div>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <Button as="a" href={smsHref} iconAfter="arrow-right" style={{ textDecoration: "none" }}>
               Text Sarah about dues
