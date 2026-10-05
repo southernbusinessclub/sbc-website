@@ -52,6 +52,7 @@
 }
 .primary:hover:not(:disabled) {
   background: var(--brand-primary-hover);
+  color: var(--yellow-500);
 }
 
 .secondary {
@@ -60,6 +61,7 @@
 }
 .secondary:hover:not(:disabled) {
   background: var(--brand-secondary-hover);
+  color: var(--text-on-accent);
 }
 
 .outline {
@@ -78,6 +80,7 @@
 }
 .ghost:hover:not(:disabled) {
   background: var(--green-100);
+  color: var(--text-link);
 }
 
 .inverse {
@@ -86,4 +89,5 @@
 }
 .inverse:hover:not(:disabled) {
   background: var(--green-100);
+  color: var(--green-700);
 }
