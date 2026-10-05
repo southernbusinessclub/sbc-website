@@ -43,17 +43,19 @@ Three Auth settings matter:
 - **Confirm signup email template** (Authentication → Email Templates) must
   link to this app, not to the raw Supabase project URL. Supabase's default
   `{{ .ConfirmationURL }}` points at `<project-ref>.supabase.co/auth/v1/verify`
-  — a domain that doesn't match the `saubusinessclub.com` sender. Mail
-  security at `@southern.edu` (and most institutional inboxes) treats a
-  from/link domain mismatch as a phishing signal and silently drops the
-  message after accepting it, which is why Resend shows "Delivered" for
-  emails officers never received. Set the template body's link to:
-  ```
-  {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup
-  ```
-  `src/app/auth/confirm/route.ts` verifies the token server-side and
-  redirects into the app, so the link a recipient sees and clicks stays on
-  `saubusinessclub.com` end to end.
+  — a domain that doesn't match the `saubusinessclub.com` sender, which looks
+  like phishing to institutional mail security and gets the message silently
+  dropped after acceptance (why Resend shows "Delivered" for emails officers
+  never received). It's also an auto-verifying `GET` link, so email security
+  scanners that pre-fetch links consume the one-time token before the real
+  recipient ever clicks it. The template's link must instead point at
+  `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup` —
+  `src/app/auth/confirm/` is a page, not a route handler, and only calls
+  `verifyOtp` when the visitor clicks "Confirm my account," so a scanner
+  loading the page can't burn the token. No Redirect URLs change is needed
+  for this: `verifyOtp` posts the token straight to Supabase from the
+  browser and returns JSON, it never goes through GoTrue's redirecting
+  `/verify` endpoint, so that allow list is never consulted.
 
 ### Bootstrapping the first officer
 
