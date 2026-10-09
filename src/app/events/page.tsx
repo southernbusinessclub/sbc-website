@@ -22,6 +22,8 @@ function toDisplayEvent(e: Awaited<ReturnType<typeof getPublishedEvents>>[number
     topic: e.topic ?? "",
     tone: e.isSignature ? "accent" : undefined,
     poster: e.isSignature,
+    dateIso: e.eventDate,
+    timeRaw: e.eventTime,
   };
 }
 
