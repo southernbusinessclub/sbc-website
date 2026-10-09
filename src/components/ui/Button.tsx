@@ -4,7 +4,7 @@ import { cx } from "@/lib/cx";
 import { Icon, type IconName } from "./Icon";
 import styles from "./Button.module.css";
 
-type Variant = "primary" | "secondary" | "outline" | "ghost" | "inverse";
+type Variant = "primary" | "secondary" | "outline" | "ghost" | "inverse" | "danger";
 type Size = "sm" | "md" | "lg";
 
 interface CommonProps {
