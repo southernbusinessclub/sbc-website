@@ -90,6 +90,24 @@ function formatDateOnly(year: number, month: number, day: number): string {
   return `${year}${pad(month)}${pad(day)}`;
 }
 
+/** Renders a UTC instant as its America/New_York wall-clock "YYYYMMDDTHHMMSS". */
+function formatNyLocal(d: Date): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: NY_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).formatToParts(d);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
+  // Some engines render midnight as "24" with hour12:false.
+  const hour = get("hour") === "24" ? "00" : get("hour");
+  return `${get("year")}${get("month")}${get("day")}T${hour}${get("minute")}${get("second")}`;
+}
+
 interface ResolvedTimedEvent {
   allDay: false;
   startUtc: Date;
@@ -168,11 +186,16 @@ export function buildIcsContent(input: CalendarEventInput): string {
 
 export function buildGoogleCalendarUrl(input: CalendarEventInput): string {
   const resolved = resolveCalendarEvent(input.dateIso, input.timeRaw);
-  const dates = resolved.allDay
-    ? `${resolved.startDateOnly}/${resolved.endDateOnly}`
-    : `${formatIcsUtc(resolved.startUtc)}/${formatIcsUtc(resolved.endUtc)}`;
 
-  const params = new URLSearchParams({ action: "TEMPLATE", text: input.title, dates });
+  const params = new URLSearchParams({ action: "TEMPLATE", text: input.title });
+  if (resolved.allDay) {
+    params.set("dates", `${resolved.startDateOnly}/${resolved.endDateOnly}`);
+  } else {
+    // Local wall-clock time plus an explicit ctz, rather than UTC — Google
+    // Calendar renders this at face value in the viewer's own calendar.
+    params.set("dates", `${formatNyLocal(resolved.startUtc)}/${formatNyLocal(resolved.endUtc)}`);
+    params.set("ctz", NY_TIME_ZONE);
+  }
   if (input.description) params.set("details", input.description);
   if (input.location) params.set("location", input.location);
 

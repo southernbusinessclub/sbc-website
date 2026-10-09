@@ -1,4 +1,7 @@
+"use client";
+
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { IconButton } from "./IconButton";
 import styles from "./Dialog.module.css";
 
@@ -15,11 +18,17 @@ export interface DialogProps {
 }
 
 export function Dialog({ open = true, title, children, footer, onClose, width = 480, style }: DialogProps) {
-  if (!open) return null;
+  // Portaled to document.body: a dialog rendered in place would sit inside
+  // whatever called it, and position:fixed stops meaning "relative to the
+  // viewport" the moment an ancestor (e.g. EventCard's hover transform)
+  // creates its own containing block — the dialog then gets squeezed into
+  // that ancestor's box instead of centering on the page. `document` only
+  // exists once mounted in the browser, which also makes this SSR-safe.
+  if (!open || typeof document === "undefined") return null;
 
   const stop = (e: MouseEvent) => e.stopPropagation();
 
-  return (
+  return createPortal(
     <div className={styles.overlay} onClick={onClose}>
       <div
         role="dialog"
@@ -35,6 +44,7 @@ export function Dialog({ open = true, title, children, footer, onClose, width = 
         <div className={styles.body}>{children}</div>
         {footer ? <div className={styles.footer}>{footer}</div> : null}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
