@@ -99,7 +99,9 @@ export default function LoginPage() {
               {submitting ? "Logging in…" : "Log in"}
             </Button>
           </form>
-          <p className={styles.forgot}>Forgot your password?</p>
+          <p className={styles.forgot}>
+            <Link href="/forgot-password">Forgot your password?</Link>
+          </p>
           <div className={styles.footerLinks}>
             <span>
               Been in the club before but never set a password? <Link href="/claim">Claim your account</Link>

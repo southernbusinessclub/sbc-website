@@ -47,3 +47,16 @@
   color: var(--text-muted);
   margin: 0 0 24px;
 }
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.formError {
+  font-size: 13.5px;
+  color: var(--red-600);
+  margin: 12px 0 0;
+}
