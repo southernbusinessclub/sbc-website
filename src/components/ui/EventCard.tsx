@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { cx } from "@/lib/cx";
+import { AddToCalendar } from "@/components/events/AddToCalendar";
 import { Badge } from "./Badge";
 import { Button } from "./Button";
 import { Card } from "./Card";
@@ -9,6 +10,8 @@ import styles from "./EventCard.module.css";
 type Tone = "brand" | "accent";
 
 export interface EventCardProps {
+  /** Needed to build a stable calendar UID — omit to skip "Add to calendar". */
+  id?: string;
   title: string;
   /** Date chip contents. */
   date: { month: string; day: string | number };
@@ -23,9 +26,14 @@ export interface EventCardProps {
   poster?: boolean;
   onRsvp?: () => void;
   style?: CSSProperties;
+  /** Raw "YYYY-MM-DD", for calendar export — pass only for upcoming events. */
+  dateIso?: string | null;
+  /** Raw free-text admin time field, for calendar export. */
+  timeRaw?: string | null;
 }
 
 export function EventCard({
+  id,
   title,
   date,
   time,
@@ -36,6 +44,8 @@ export function EventCard({
   poster = false,
   onRsvp,
   style,
+  dateIso,
+  timeRaw,
 }: EventCardProps) {
   return (
     <Card variant={poster ? "poster" : "plain"} padding="0" className={styles.eventCard} style={style}>
@@ -63,11 +73,16 @@ export function EventCard({
           </div>
           {description ? <p className={styles.description}>{description}</p> : null}
         </div>
-        {onRsvp ? (
+        {onRsvp || (id && dateIso) ? (
           <div className={styles.rsvp}>
-            <Button variant={tone === "accent" ? "secondary" : "outline"} size="sm" onClick={onRsvp}>
-              RSVP
-            </Button>
+            {onRsvp ? (
+              <Button variant={tone === "accent" ? "secondary" : "outline"} size="sm" onClick={onRsvp}>
+                RSVP
+              </Button>
+            ) : null}
+            {id && dateIso ? (
+              <AddToCalendar id={id} title={title} dateIso={dateIso} timeRaw={timeRaw ?? null} location={location} description={description} />
+            ) : null}
           </div>
         ) : null}
       </div>

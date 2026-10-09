@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Button, Card, Dialog, EventCard, Tabs, Tag } from "@/components/ui";
+import { isEventUpcoming } from "@/lib/event-dates";
 import { rsvpToEvent } from "@/app/events/rsvp-action";
 import { ToastViewport } from "@/components/site/ToastViewport";
 import { useToast } from "@/lib/useToast";
@@ -20,6 +21,10 @@ export interface DisplayEvent {
   topic: string;
   tone?: "brand" | "accent";
   poster?: boolean;
+  /** Raw "YYYY-MM-DD", or null for a TBA event. */
+  dateIso: string | null;
+  /** Raw free-text admin time field. */
+  timeRaw: string | null;
 }
 
 const TOPICS = ["All", "Networking", "Workshops", "Worship", "Service", "Traditions"];
@@ -81,6 +86,7 @@ export function EventsBrowser({
           {list.map((e) => (
             <EventCard
               key={e.id}
+              id={e.id}
               title={e.title}
               date={e.date}
               time={e.time}
@@ -90,6 +96,8 @@ export function EventsBrowser({
               tone={e.tone}
               poster={e.poster}
               onRsvp={tab === "Upcoming" ? () => openRsvp(e) : undefined}
+              dateIso={isEventUpcoming(e.dateIso) ? e.dateIso : null}
+              timeRaw={e.timeRaw}
             />
           ))}
           {list.length === 0 ? (
