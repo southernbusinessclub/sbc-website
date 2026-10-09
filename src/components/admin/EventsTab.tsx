@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Button, Card, Icon, Input, Select, Switch, Tag, Textarea } from "@/components/ui";
+import { Button, Card, Dialog, Icon, Input, Select, Switch, Tag, Textarea } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./admin.module.css";
 
@@ -40,6 +40,9 @@ export function EventsTab({
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [description, setDescription] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<EventRow | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const togglePublished = async (event: EventRow) => {
     const next = !event.published;
@@ -50,6 +53,25 @@ export function EventsTab({
       title: next ? "Published" : "Unpublished",
       message: `${event.title}${next ? " is live on the calendar." : " is hidden from the calendar."}`,
     });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const target = deleteTarget;
+    setDeleting(true);
+    const supabase = createClient();
+    const { data, error: deleteErrorResult } = await supabase.from("events").delete().eq("id", target.id).select();
+    setDeleting(false);
+    setDeleteTarget(null);
+
+    if (deleteErrorResult || data?.length !== 1) {
+      setDeleteError("Couldn't delete this event. Try again, or unpublish it instead.");
+      return;
+    }
+
+    setDeleteError(null);
+    setEvents((list) => list.filter((e) => e.id !== target.id));
+    onNotify({ title: "Event deleted", message: `${target.title} and its RSVPs are gone.` });
   };
 
   const saveDraft = async (e: FormEvent) => {
@@ -150,6 +172,7 @@ export function EventsTab({
               <th className={styles.th}>Category</th>
               <th className={styles.th}>RSVPs</th>
               <th className={`${styles.th} ${styles.thRight}`}>Published</th>
+              <th className={`${styles.th} ${styles.thRight}`}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -172,11 +195,47 @@ export function EventsTab({
                 <td className={`${styles.td} ${styles.tdRight}`}>
                   <Switch checked={e.published} onChange={() => togglePublished(e)} />
                 </td>
+                <td className={`${styles.td} ${styles.tdRight}`}>
+                  <Button variant="ghost" size="sm" disabled={deleting} onClick={() => setDeleteTarget(e)}>
+                    Delete
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {deleteError ? <p className={styles.errorText}>{deleteError}</p> : null}
+
+      <Dialog
+        open={deleteTarget !== null}
+        title="Delete event?"
+        onClose={() => setDeleteTarget(null)}
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setDeleteTarget(null)} disabled={deleting}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={confirmDelete} disabled={deleting}>
+              {deleting ? "Deleting…" : "Delete event"}
+            </Button>
+          </>
+        }
+      >
+        {deleteTarget ? (
+          <>
+            <p style={{ margin: "0 0 10px" }}>
+              Delete <strong>{deleteTarget.title}</strong>?{" "}
+              {deleteTarget.rsvpCount > 0
+                ? `This will also delete its ${deleteTarget.rsvpCount} RSVP${deleteTarget.rsvpCount === 1 ? "" : "s"}.`
+                : "It has no RSVPs."}
+            </p>
+            {deleteTarget.rsvpCount > 0 ? (
+              <p style={{ margin: 0, color: "var(--text-muted)", fontSize: 14 }}>Consider unpublishing instead.</p>
+            ) : null}
+          </>
+        ) : null}
+      </Dialog>
     </div>
   );
 }

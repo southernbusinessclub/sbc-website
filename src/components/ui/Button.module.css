@@ -91,3 +91,12 @@
   background: var(--green-100);
   color: var(--green-700);
 }
+
+.danger {
+  background: var(--status-danger);
+  color: var(--white);
+}
+.danger:hover:not(:disabled) {
+  background: var(--red-600);
+  color: var(--white);
+}
