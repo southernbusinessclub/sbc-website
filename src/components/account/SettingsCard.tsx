@@ -40,8 +40,8 @@ export function SettingsCard({
         <Switch label="Text me event reminders" checked={texts} onChange={toggleTexts} />
       </div>
       <div className={styles.settingsActions}>
-        <Button variant="outline" size="sm">
-          Edit profile
+        <Button variant="outline" size="sm" disabled aria-disabled="true">
+          Coming soon
         </Button>
         {isOfficer ? (
           <Tooltip label="Officers can export the roster">
