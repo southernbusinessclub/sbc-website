@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import type { FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { EmailOtpType } from "@supabase/supabase-js";
-import { Button, Card, Icon } from "@/components/ui";
+import { Button, Card, Icon, Input } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./confirm.module.css";
 
-type Status = "ready" | "verifying" | "success" | "already" | "invalid" | "linkError";
+type Status = "ready" | "verifying" | "success" | "already" | "invalid" | "linkError" | "newpw";
 
 export function ConfirmCard() {
   const router = useRouter();
@@ -15,10 +16,17 @@ export function ConfirmCard() {
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
   const next = searchParams.get("next") ?? "/account";
+  const isRecovery = type === "recovery";
 
   const [status, setStatus] = useState<Status>(tokenHash && type ? "ready" : "invalid");
   const [confirmedEmail, setConfirmedEmail] = useState<string | null>(null);
   const [linking, setLinking] = useState(false);
+
+  const [pw, setPw] = useState("");
+  const [pw2, setPw2] = useState("");
+  const [pwError, setPwError] = useState<string | null>(null);
+  const [pwBusy, setPwBusy] = useState(false);
+  const pwOk = pw.length >= 8 && pw === pw2;
 
   // No-op for a brand-new Join signup (no unclaimed roster row to find), and
   // the only thing that links a returning Claim member's confirmed login
@@ -52,6 +60,10 @@ export function ConfirmCard() {
           return;
         }
       }
+      if (isRecovery) {
+        setStatus("newpw");
+        return;
+      }
       setStatus("success");
       return;
     }
@@ -71,20 +83,78 @@ export function ConfirmCard() {
     setStatus(linked ? "success" : "linkError");
   };
 
+  const submitNewPassword = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!pwOk) return;
+    setPwError(null);
+    setPwBusy(true);
+    const supabase = createClient();
+    const { error } = await supabase.auth.updateUser({ password: pw });
+    setPwBusy(false);
+    if (error) {
+      setPwError(error.message);
+      return;
+    }
+    router.refresh();
+    router.push(next);
+  };
+
   return (
     <Card padding="var(--space-8)" className={styles.card}>
       {status === "ready" || status === "verifying" ? (
         <>
           <span className={styles.icon}>
-            <Icon name="mail" size={26} />
+            <Icon name={isRecovery ? "key-round" : "mail"} size={26} />
           </span>
-          <h1 className={styles.title}>Confirm your email</h1>
+          <h1 className={styles.title}>{isRecovery ? "Reset your password" : "Confirm your email"}</h1>
           <p className={styles.lede}>
-            Tap the button below to finish setting up your Southern Business Club account.
+            {isRecovery
+              ? "Tap the button below to verify it's you, then set a new password."
+              : "Tap the button below to finish setting up your Southern Business Club account."}
           </p>
           <Button size="lg" full disabled={status === "verifying"} onClick={confirm}>
-            {status === "verifying" ? "Confirming…" : "Confirm my account"}
+            {isRecovery
+              ? status === "verifying"
+                ? "Verifying…"
+                : "Reset my password"
+              : status === "verifying"
+                ? "Confirming…"
+                : "Confirm my account"}
           </Button>
+        </>
+      ) : null}
+
+      {status === "newpw" ? (
+        <>
+          <span className={styles.icon}>
+            <Icon name="key-round" size={26} />
+          </span>
+          <h1 className={styles.title}>Set a new password</h1>
+          <p className={styles.lede}>Choose a new password for your account.</p>
+          <form onSubmit={submitNewPassword}>
+            <div className={styles.fields}>
+              <Input
+                label="New password"
+                icon="lock"
+                type="password"
+                placeholder="At least 8 characters"
+                value={pw}
+                onChange={(e) => setPw(e.target.value)}
+              />
+              <Input
+                label="Confirm password"
+                icon="lock"
+                type="password"
+                value={pw2}
+                onChange={(e) => setPw2(e.target.value)}
+                error={pw2.length > 0 && pw !== pw2 ? "Those don't match." : undefined}
+              />
+            </div>
+            <Button type="submit" size="lg" full style={{ marginTop: 20 }} disabled={!pwOk || pwBusy}>
+              {pwBusy ? "Setting…" : "Set new password"}
+            </Button>
+          </form>
+          {pwError ? <p className={styles.formError}>{pwError}</p> : null}
         </>
       ) : null}
 
@@ -106,8 +176,12 @@ export function ConfirmCard() {
           <span className={`${styles.icon} ${styles.iconSuccess}`}>
             <Icon name="badge-check" size={26} />
           </span>
-          <h1 className={styles.title}>You&apos;re all set</h1>
-          <p className={styles.lede}>This account is already confirmed. Sign in to get to your member area.</p>
+          <h1 className={styles.title}>{isRecovery ? "Link already used" : "You're all set"}</h1>
+          <p className={styles.lede}>
+            {isRecovery
+              ? "This reset link has already been used. If you already set a new password, sign in with it."
+              : "This account is already confirmed. Sign in to get to your member area."}
+          </p>
           <Button as="a" href="/login" size="lg" full style={{ textDecoration: "none" }}>
             Sign in
           </Button>
@@ -136,9 +210,11 @@ export function ConfirmCard() {
           </span>
           <h1 className={styles.title}>That link didn&apos;t work</h1>
           <p className={styles.lede}>
-            This confirmation link is invalid or has expired. Sign up again and we&apos;ll send a new one.
+            {isRecovery
+              ? "This password reset link is invalid or has expired. Request a new one."
+              : "This confirmation link is invalid or has expired. Sign up again and we'll send a new one."}
           </p>
-          <Button as="a" href="/join" size="lg" full style={{ textDecoration: "none" }}>
+          <Button as="a" href={isRecovery ? "/forgot-password" : "/join"} size="lg" full style={{ textDecoration: "none" }}>
             Request a new link
           </Button>
         </>
