@@ -59,7 +59,9 @@ export default function WorkshopsPage() {
             <p className={styles.heroCardBody}>
               Ruth McKee School of Business. Slots open once we set the date — members get first pick.
             </p>
-            <Button>Get notified</Button>
+            <Button disabled aria-disabled="true">
+              Coming soon
+            </Button>
           </Card>
         </div>
       </section>

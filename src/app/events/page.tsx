@@ -62,8 +62,8 @@ export default async function EventsPage() {
                   <p className={styles.sidebarBody}>
                     Bring a resume, or just questions. Times posted once the semester settles.
                   </p>
-                  <Button variant="ghost" size="sm" iconAfter="arrow-right">
-                    Book a slot
+                  <Button variant="ghost" size="sm" disabled aria-disabled="true">
+                    Coming soon
                   </Button>
                 </Card>
                 <Card variant="accent">
@@ -72,8 +72,8 @@ export default async function EventsPage() {
                   <p className={styles.sidebarBody} style={{ margin: "0 0 14px" }}>
                     One message the morning of each event. Nothing else, ever.
                   </p>
-                  <Button variant="outline" size="sm">
-                    Add my number
+                  <Button variant="outline" size="sm" disabled aria-disabled="true">
+                    Coming soon
                   </Button>
                 </Card>
                 <div className={styles.sidebarNote}>
