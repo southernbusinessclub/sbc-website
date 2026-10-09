@@ -27,10 +27,22 @@ export function SiteFooter() {
             The business club at Southern Adventist University. Collegedale, Tennessee.
           </p>
           <div className={styles.social}>
-            <a className={styles.socialLink} href="https://instagram.com" aria-label="Instagram">
+            <a
+              className={styles.socialLink}
+              href="https://www.instagram.com/businessclubsau"
+              aria-label="Instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <BrandIcon name="instagram" size={19} />
             </a>
-            <a className={styles.socialLink} href="https://linkedin.com" aria-label="LinkedIn">
+            <a
+              className={styles.socialLink}
+              href="https://www.linkedin.com/company/southern-business-club/"
+              aria-label="LinkedIn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <BrandIcon name="linkedin" size={19} />
             </a>
             <a className={styles.socialLink} href="mailto:businessclub@southern.edu" aria-label="Email us">
