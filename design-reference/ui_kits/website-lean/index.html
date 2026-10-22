@@ -37,7 +37,7 @@ function App() {
   const confirm = () => { setDialog(false); notify({ title: 'You are on the list', message: "We'll text you as soon as the date is set." }); };
   const submit = () => notify({ title: 'You are on the roster', message: 'Sarah and Andrew just got your name and number. Bring $10 cash to the next event.' });
   const login = () => { setUser(USER); go('Account'); notify({ title: 'Signed in', message: 'Welcome back, Steve.' }); };
-  const claimed = (m) => { setUser(m); go('Account'); notify({ title: 'Account claimed', message: m.duesPaid ? 'Your dues were already on record. Nothing owed.' : 'Dues still show unpaid — text Sarah to sort it out.' }); };
+  const claimed = (m) => { setUser(m); go('Account'); notify({ title: 'Account claimed', message: m.duesPaid ? 'Your dues were already on record. Nothing owed.' : 'Dues still show unpaid — email Sarah to sort it out.' }); };
   const logout = () => { setUser(null); go('Home'); };
   const feedback = (title) => notify({ title: 'Feedback sent', message: 'The officers will see your notes on ' + title + '.' });
   return (

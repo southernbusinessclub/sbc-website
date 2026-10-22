@@ -8,7 +8,7 @@ const ROSTER = [
   { email: 'jreyes@southern.edu', name: 'Jonah Reyes', initials: 'JR', major: 'Accounting', standing: 'Freshman', since: '2026', duesPaid: false },
 ];
 
-const TREASURER_TEL = '+14079122508';
+const TREASURER_EMAIL = 'sarahchobotar@southern.edu';
 const YEAR = '2026–27';
 
 function Row({ label, value }) {
@@ -94,8 +94,8 @@ function ClaimLean({ onNavigate, onClaimed }) {
               {!match.duesPaid ? (
                 <div style={{ padding: '14px 16px', borderRadius: 'var(--radius-md)', background: 'var(--surface-sunken)', borderLeft: '5px solid var(--yellow-500)', marginBottom: 18 }}>
                   <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 14.5, color: 'var(--text-heading)', marginBottom: 4 }}>Dues are $10 a year, and {YEAR} isn't paid</div>
-                  <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: '0 0 12px' }}>You still get the account and your history. Hand Sarah $10 at the next event to stay a member — or if you already paid her this year, text her and she'll fix the record.</p>
-                  <Button as="a" href={'sms:' + TREASURER_TEL + '?&body=' + encodeURIComponent('Hey Sarah! This is ' + match.name + '. I think I already paid my club dues but the site has me as unpaid. Can you check?')} variant="outline" size="sm" style={{ textDecoration: 'none' }}>Text Sarah</Button>
+                  <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: '0 0 12px' }}>You still get the account and your history. Hand Sarah $10 at the next event to stay a member — or if you already paid her this year, email her and she'll fix the record.</p>
+                  <Button as="a" href={'mailto:' + TREASURER_EMAIL + '?subject=' + encodeURIComponent('[SBC Dues] ' + match.name) + '&body=' + encodeURIComponent('Hi Sarah,\n\nThis is ' + match.name + '. I think I already paid my club dues but the site has me as unpaid. Can you check?\n\nThanks,\n' + match.name)} variant="outline" size="sm" style={{ textDecoration: 'none' }}>Email Sarah</Button>
                 </div>
               ) : null}
               <Button size="lg" full onClick={() => setStep('setpw')}>That's me — set a password</Button>
@@ -126,7 +126,7 @@ function ClaimLean({ onNavigate, onClaimed }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <Button size="lg" full onClick={() => onNavigate('Join')}>Join the club — $10</Button>
                 <Button variant="outline" full onClick={() => setStep('email')}>Try a different email</Button>
-                <Button as="a" href={'sms:' + TREASURER_TEL + '?&body=' + encodeURIComponent("Hey Sarah! I'm already in the business club but the site can't find me. Can you add my email?")} variant="ghost" full style={{ textDecoration: 'none' }}>I'm sure I'm a member — text Sarah</Button>
+                <Button as="a" href={'mailto:' + TREASURER_EMAIL + '?subject=' + encodeURIComponent('[SBC] Roster lookup') + '&body=' + encodeURIComponent("Hi Sarah,\n\nI'm already in the business club but the site can't find me. Can you add my email?\n\nThanks,\n[your name]")} variant="ghost" full style={{ textDecoration: 'none' }}>I'm sure I'm a member — email Sarah</Button>
               </div>
             </div>
           ) : null}

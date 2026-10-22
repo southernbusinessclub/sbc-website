@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { Badge, Button, Card, Icon } from "@/components/ui";
 import { AttendedEvents, type FeedbackState } from "@/components/account/AttendedEvents";
 import { SettingsCard } from "@/components/account/SettingsCard";
-import { CURRENT_SCHOOL_YEAR, TREASURER } from "@/lib/school-year";
+import { CURRENT_SCHOOL_YEAR, DUES_EMAIL_TAG, TREASURER, mailtoHref } from "@/lib/school-year";
 import { isSupabaseConfigured } from "@/lib/supabase/is-configured";
 import { createClient } from "@/lib/supabase/server";
 import styles from "./account.module.css";
@@ -155,18 +155,20 @@ export default async function AccountPage() {
                 <div className={styles.duesBannerTitle}>Your {CURRENT_SCHOOL_YEAR} dues aren&apos;t paid</div>
                 <div className={styles.duesBannerBody}>
                   Dues are $10 each school year. Hand Sarah cash at any event — or if you already paid her this year,
-                  text her and she&apos;ll fix the record.
+                  email her and she&apos;ll fix the record.
                 </div>
               </div>
               <Button
                 as="a"
-                href={`sms:${TREASURER.tel}?&body=${encodeURIComponent(
-                  `Hey Sarah! This is ${member.first_name} ${member.last_name}. Checking on my club dues.`,
-                )}`}
+                href={mailtoHref(
+                  TREASURER.email,
+                  `${DUES_EMAIL_TAG} ${member.first_name} ${member.last_name}`,
+                  `Hi Sarah,\n\nThis is ${member.first_name} ${member.last_name}. I think I already paid my club dues — can you check on it?\n\nThanks,\n${member.first_name}`,
+                )}
                 variant="outline"
                 style={{ textDecoration: "none" }}
               >
-                Text Sarah
+                Email Sarah
               </Button>
             </Card>
           </div>

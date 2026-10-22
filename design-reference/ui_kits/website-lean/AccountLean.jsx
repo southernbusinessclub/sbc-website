@@ -31,7 +31,7 @@ function Stars({ value, onChange }) {
   );
 }
 
-const TREASURER_TEL = '+14079122508';
+const TREASURER_EMAIL = 'sarahchobotar@southern.edu';
 
 function AccountLean({ user, onNavigate, onLogout, onSaveFeedback }) {
   const paid = !!user.duesPaid;
@@ -87,9 +87,9 @@ function AccountLean({ user, onNavigate, onLogout, onSaveFeedback }) {
             <span style={{ color: 'var(--green-700)', display: 'inline-flex' }}><Icon name="wallet" size={22} /></span>
             <div style={{ flex: 1, minWidth: 260 }}>
               <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 16, color: 'var(--text-heading)' }}>Your 2026–27 dues aren't paid</div>
-              <div style={{ fontSize: 14.5, color: 'var(--text-muted)' }}>Dues are $10 each school year. Hand Sarah cash at any event — or if you already paid her this year, text her and she'll fix the record.</div>
+              <div style={{ fontSize: 14.5, color: 'var(--text-muted)' }}>Dues are $10 each school year. Hand Sarah cash at any event — or if you already paid her this year, email her and she'll fix the record.</div>
             </div>
-            <Button as="a" href={'sms:' + TREASURER_TEL + '?&body=' + encodeURIComponent('Hey Sarah! This is ' + user.name + '. Checking on my club dues.')} variant="outline" style={{ textDecoration: 'none' }}>Text Sarah</Button>
+            <Button as="a" href={'mailto:' + TREASURER_EMAIL + '?subject=' + encodeURIComponent('[SBC Dues] ' + user.name) + '&body=' + encodeURIComponent('Hi Sarah,\n\nThis is ' + user.name + '. I think I already paid my club dues — can you check on it?\n\nThanks,\n' + user.name)} variant="outline" style={{ textDecoration: 'none' }}>Email Sarah</Button>
           </Card>
         </div>
       </section>

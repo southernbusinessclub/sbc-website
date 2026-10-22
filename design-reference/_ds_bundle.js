@@ -2236,7 +2236,7 @@ try { (() => {
       }));
     }));
   }
-  const TREASURER_TEL = '+14079122508';
+  const TREASURER_EMAIL = 'sarahchobotar@southern.edu';
   function AccountLean({
     user,
     onNavigate,
@@ -2434,14 +2434,14 @@ try { (() => {
         fontSize: 14.5,
         color: 'var(--text-muted)'
       }
-    }, "Dues are $10 each school year. Hand Sarah cash at any event \u2014 or if you already paid her this year, text her and she'll fix the record.")), /*#__PURE__*/React.createElement(Button, {
+    }, "Dues are $10 each school year. Hand Sarah cash at any event \u2014 or if you already paid her this year, email her and she'll fix the record.")), /*#__PURE__*/React.createElement(Button, {
       as: "a",
-      href: 'sms:' + TREASURER_TEL + '?&body=' + encodeURIComponent('Hey Sarah! This is ' + user.name + '. Checking on my club dues.'),
+      href: 'mailto:' + TREASURER_EMAIL + '?subject=' + encodeURIComponent('[SBC Dues] ' + user.name) + '&body=' + encodeURIComponent('Hi Sarah,\n\nThis is ' + user.name + '. I think I already paid my club dues \u2014 can you check on it?\n\nThanks,\n' + user.name),
       variant: "outline",
       style: {
         textDecoration: 'none'
       }
-    }, "Text Sarah")))) : null, /*#__PURE__*/React.createElement("section", {
+    }, "Email Sarah")))) : null, /*#__PURE__*/React.createElement("section", {
       style: {
         padding: '56px 32px 80px'
       }
@@ -3724,7 +3724,7 @@ try { (() => {
     since: '2026',
     duesPaid: false
   }];
-  const TREASURER_TEL = '+14079122508';
+  const TREASURER_EMAIL = 'sarahchobotar@southern.edu';
   const YEAR = '2026–27';
   function Row({
     label,
@@ -3993,15 +3993,15 @@ try { (() => {
         color: 'var(--text-muted)',
         margin: '0 0 12px'
       }
-    }, "You still get the account and your history. Hand Sarah $10 at the next event to stay a member \u2014 or if you already paid her this year, text her and she'll fix the record."), /*#__PURE__*/React.createElement(Button, {
+    }, "You still get the account and your history. Hand Sarah $10 at the next event to stay a member \u2014 or if you already paid her this year, email her and she'll fix the record."), /*#__PURE__*/React.createElement(Button, {
       as: "a",
-      href: 'sms:' + TREASURER_TEL + '?&body=' + encodeURIComponent('Hey Sarah! This is ' + match.name + '. I think I already paid my club dues but the site has me as unpaid. Can you check?'),
+      href: 'mailto:' + TREASURER_EMAIL + '?subject=' + encodeURIComponent('[SBC Dues] ' + match.name) + '&body=' + encodeURIComponent('Hi Sarah,\n\nThis is ' + match.name + '. I think I already paid my club dues but the site has me as unpaid. Can you check?\n\nThanks,\n' + match.name),
       variant: "outline",
       size: "sm",
       style: {
         textDecoration: 'none'
       }
-    }, "Text Sarah")) : null, /*#__PURE__*/React.createElement(Button, {
+    }, "Email Sarah")) : null, /*#__PURE__*/React.createElement(Button, {
       size: "lg",
       full: true,
       onClick: () => setStep('setpw')
@@ -4144,13 +4144,13 @@ try { (() => {
       onClick: () => setStep('email')
     }, "Try a different email"), /*#__PURE__*/React.createElement(Button, {
       as: "a",
-      href: 'sms:' + TREASURER_TEL + '?&body=' + encodeURIComponent("Hey Sarah! I'm already in the business club but the site can't find me. Can you add my email?"),
+      href: 'mailto:' + TREASURER_EMAIL + '?subject=' + encodeURIComponent('[SBC] Roster lookup') + '&body=' + encodeURIComponent("Hi Sarah,\n\nI'm already in the business club but the site can't find me. Can you add my email?\n\nThanks,\n[your name]"),
       variant: "ghost",
       full: true,
       style: {
         textDecoration: 'none'
       }
-    }, "I'm sure I'm a member \u2014 text Sarah"))) : null)));
+    }, "I'm sure I'm a member \u2014 email Sarah"))) : null)));
   }
   Object.assign(window, {
     ClaimLean
@@ -4704,10 +4704,9 @@ try { (() => {
     Icon
   } = window.SouthernBusinessClubDesignSystem_c9c84e;
   const TREASURER = {
-    name: 'Sarah Chotobar',
+    name: 'Sarah Chobotar',
     role: 'Treasurer',
-    phone: '+1 (407) 912-2508',
-    tel: '+14079122508'
+    email: 'sarahchobotar@southern.edu'
   };
   function JoinLean({
     onSubmit,
@@ -4722,8 +4721,11 @@ try { (() => {
       'Mock interviews': true,
       Headshots: false
     });
-    const smsBody = `Hey Sarah! This is ${first || '________'} ${last || '__________'}. I just registered for the business club. How can I get my dues to you?`;
-    const smsHref = 'sms:' + TREASURER.tel + '?&body=' + encodeURIComponent(smsBody);
+    const duesName = `${first} ${last}`.trim();
+    const duesSubject = `[SBC Dues] ${duesName || '[your name]'}`;
+    const duesBody = `Hi Sarah,\n\nI just signed up for Southern Business Club and want to pay my $10 dues. When and where can I hand it to you?\n\nThanks,\n${first || '[your name]'}`;
+    const mailtoHref = 'mailto:' + TREASURER.email + '?subject=' + encodeURIComponent(duesSubject) + '&body=' + encodeURIComponent(duesBody);
+    const outlookHref = 'https://outlook.office.com/mail/deeplink/compose?to=' + encodeURIComponent(TREASURER.email) + '&subject=' + encodeURIComponent(duesSubject) + '&body=' + encodeURIComponent(duesBody);
     return /*#__PURE__*/React.createElement("section", {
       style: {
         padding: '56px 32px 84px'
@@ -4967,7 +4969,7 @@ try { (() => {
         fontSize: 14.5,
         color: 'var(--text-muted)'
       }
-    }, [['1', 'Submit this form. You are on the roster right away.'], ['2', 'Hand Sarah $10 cash at any event, or text her to meet up.']].map(([n, t]) => /*#__PURE__*/React.createElement("li", {
+    }, [['1', 'Submit this form. You are on the roster right away.'], ['2', 'Hand Sarah $10 cash at any event, or email her to meet up.']].map(([n, t]) => /*#__PURE__*/React.createElement("li", {
       key: n,
       style: {
         display: 'flex',
@@ -5019,16 +5021,40 @@ try { (() => {
         fontSize: 13.5,
         color: 'var(--text-muted)'
       }
-    }, TREASURER.role, " \xB7 ", TREASURER.phone))), /*#__PURE__*/React.createElement(Button, {
+    }, TREASURER.role, " \xB7 ", TREASURER.email))), /*#__PURE__*/React.createElement(Button, {
       as: "a",
-      href: smsHref,
+      href: mailtoHref,
       variant: "outline",
       size: "sm",
       iconAfter: "arrow-right",
       style: {
         textDecoration: 'none'
       }
-    }, "Text Sarah about dues")), /*#__PURE__*/React.createElement(Card, {
+    }, "Email Sarah about dues"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        flexWrap: 'wrap',
+        marginTop: 10
+      }
+    }, /*#__PURE__*/React.createElement("a", {
+      href: outlookHref,
+      style: {
+        fontFamily: 'var(--font-body)',
+        fontSize: 13,
+        fontWeight: 600,
+        color: 'var(--text-link)',
+        textDecoration: 'underline'
+      }
+    }, "Prefer Outlook on the web?"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: 'var(--font-body)',
+        fontSize: 13,
+        color: 'var(--text-muted)',
+        userSelect: 'all'
+      }
+    }, TREASURER.email))), /*#__PURE__*/React.createElement(Card, {
       variant: "poster"
     }, /*#__PURE__*/React.createElement(Badge, {
       tone: "accent",
@@ -5414,7 +5440,7 @@ try { (() => {
 
   // Placeholder rosters — swap for the real thing once we pull the class lists.
   const ROSTER = {
-    '2026–27': [['Andrew Cornelius', 'Business administration', 'Senior', 'President'], ['Sarah Chotobar', 'Accounting', 'Junior', 'Treasurer'], ['Maya Okonkwo', 'Finance', 'Junior'], ['Dev Patel', 'Marketing', 'Sophomore'], ['Lena Fischer', 'Business administration', 'Senior'], ['Jonah Reyes', 'Accounting', 'Freshman'], ['Tessa Bright', 'Not business — just interested', 'Sophomore'], ['Caleb Nwosu', 'Finance', 'Senior']],
+    '2026–27': [['Andrew Cornelius', 'Business administration', 'Senior', 'President'], ['Sarah Chobotar', 'Accounting', 'Junior', 'Treasurer'], ['Maya Okonkwo', 'Finance', 'Junior'], ['Dev Patel', 'Marketing', 'Sophomore'], ['Lena Fischer', 'Business administration', 'Senior'], ['Jonah Reyes', 'Accounting', 'Freshman'], ['Tessa Bright', 'Not business — just interested', 'Sophomore'], ['Caleb Nwosu', 'Finance', 'Senior']],
     '2025–26': [['Priya Raman', 'Marketing', 'Senior'], ['Eli Barron', 'Business administration', 'Senior'], ['Noor Haddad', 'Accounting', 'Junior'], ['Grant Whitlow', 'Finance', 'Junior']],
     '2024–25': [['Isabel Moreno', 'Business administration', 'Senior'], ['Theo Lindqvist', 'Finance', 'Senior'], ['Amara Diallo', 'Marketing', 'Junior']]
   };
@@ -6309,7 +6335,7 @@ try { (() => {
       }));
     }));
   }
-  const TREASURER_TEL = '+14079122508';
+  const TREASURER_EMAIL = 'sarahchobotar@southern.edu';
   function AccountV2({
     user,
     onNavigate,
@@ -6507,14 +6533,14 @@ try { (() => {
         fontSize: 14.5,
         color: 'var(--text-muted)'
       }
-    }, "Dues are $10 each school year. Hand Sarah cash at any event \u2014 or if you already paid her this year, text her and she'll fix the record.")), /*#__PURE__*/React.createElement(Button, {
+    }, "Dues are $10 each school year. Hand Sarah cash at any event \u2014 or if you already paid her this year, email her and she'll fix the record.")), /*#__PURE__*/React.createElement(Button, {
       as: "a",
-      href: 'sms:' + TREASURER_TEL + '?&body=' + encodeURIComponent('Hey Sarah! This is ' + user.name + '. Checking on my club dues.'),
+      href: 'mailto:' + TREASURER_EMAIL + '?subject=' + encodeURIComponent('[SBC Dues] ' + user.name) + '&body=' + encodeURIComponent('Hi Sarah,\n\nThis is ' + user.name + '. I think I already paid my club dues \u2014 can you check on it?\n\nThanks,\n' + user.name),
       variant: "outline",
       style: {
         textDecoration: 'none'
       }
-    }, "Text Sarah")))) : null, /*#__PURE__*/React.createElement("section", {
+    }, "Email Sarah")))) : null, /*#__PURE__*/React.createElement("section", {
       style: {
         padding: '56px 32px 80px'
       }
@@ -7163,7 +7189,7 @@ try { (() => {
     since: '2026',
     duesPaid: false
   }];
-  const TREASURER_TEL = '+14079122508';
+  const TREASURER_EMAIL = 'sarahchobotar@southern.edu';
   const YEAR = '2026–27';
   function Row({
     label,
@@ -7432,15 +7458,15 @@ try { (() => {
         color: 'var(--text-muted)',
         margin: '0 0 12px'
       }
-    }, "You still get the account and your history. Hand Sarah $10 at the next event to stay a member \u2014 or if you already paid her this year, text her and she'll fix the record."), /*#__PURE__*/React.createElement(Button, {
+    }, "You still get the account and your history. Hand Sarah $10 at the next event to stay a member \u2014 or if you already paid her this year, email her and she'll fix the record."), /*#__PURE__*/React.createElement(Button, {
       as: "a",
-      href: 'sms:' + TREASURER_TEL + '?&body=' + encodeURIComponent('Hey Sarah! This is ' + match.name + '. I think I already paid my club dues but the site has me as unpaid. Can you check?'),
+      href: 'mailto:' + TREASURER_EMAIL + '?subject=' + encodeURIComponent('[SBC Dues] ' + match.name) + '&body=' + encodeURIComponent('Hi Sarah,\n\nThis is ' + match.name + '. I think I already paid my club dues but the site has me as unpaid. Can you check?\n\nThanks,\n' + match.name),
       variant: "outline",
       size: "sm",
       style: {
         textDecoration: 'none'
       }
-    }, "Text Sarah")) : null, /*#__PURE__*/React.createElement(Button, {
+    }, "Email Sarah")) : null, /*#__PURE__*/React.createElement(Button, {
       size: "lg",
       full: true,
       onClick: () => setStep('setpw')
@@ -7583,13 +7609,13 @@ try { (() => {
       onClick: () => setStep('email')
     }, "Try a different email"), /*#__PURE__*/React.createElement(Button, {
       as: "a",
-      href: 'sms:' + TREASURER_TEL + '?&body=' + encodeURIComponent("Hey Sarah! I'm already in the business club but the site can't find me. Can you add my email?"),
+      href: 'mailto:' + TREASURER_EMAIL + '?subject=' + encodeURIComponent('[SBC] Roster lookup') + '&body=' + encodeURIComponent("Hi Sarah,\n\nI'm already in the business club but the site can't find me. Can you add my email?\n\nThanks,\n[your name]"),
       variant: "ghost",
       full: true,
       style: {
         textDecoration: 'none'
       }
-    }, "I'm sure I'm a member \u2014 text Sarah"))) : null)));
+    }, "I'm sure I'm a member \u2014 email Sarah"))) : null)));
   }
   Object.assign(window, {
     ClaimV2
@@ -8143,10 +8169,9 @@ try { (() => {
     Icon
   } = window.SouthernBusinessClubDesignSystem_c9c84e;
   const TREASURER = {
-    name: 'Sarah Chotobar',
+    name: 'Sarah Chobotar',
     role: 'Treasurer',
-    phone: '+1 (407) 912-2508',
-    tel: '+14079122508'
+    email: 'sarahchobotar@southern.edu'
   };
   function JoinV2({
     onSubmit,
@@ -8161,8 +8186,11 @@ try { (() => {
       'Mock interviews': true,
       Headshots: false
     });
-    const smsBody = `Hey Sarah! This is ${first || '________'} ${last || '__________'}. I just registered for the business club. How can I get my dues to you?`;
-    const smsHref = 'sms:' + TREASURER.tel + '?&body=' + encodeURIComponent(smsBody);
+    const duesName = `${first} ${last}`.trim();
+    const duesSubject = `[SBC Dues] ${duesName || '[your name]'}`;
+    const duesBody = `Hi Sarah,\n\nI just signed up for Southern Business Club and want to pay my $10 dues. When and where can I hand it to you?\n\nThanks,\n${first || '[your name]'}`;
+    const mailtoHref = 'mailto:' + TREASURER.email + '?subject=' + encodeURIComponent(duesSubject) + '&body=' + encodeURIComponent(duesBody);
+    const outlookHref = 'https://outlook.office.com/mail/deeplink/compose?to=' + encodeURIComponent(TREASURER.email) + '&subject=' + encodeURIComponent(duesSubject) + '&body=' + encodeURIComponent(duesBody);
     return /*#__PURE__*/React.createElement("section", {
       style: {
         padding: '56px 32px 84px'
@@ -8406,7 +8434,7 @@ try { (() => {
         fontSize: 14.5,
         color: 'var(--text-muted)'
       }
-    }, [['1', 'Submit this form. You are on the roster right away.'], ['2', 'Hand Sarah $10 cash at any event, or text her to meet up.']].map(([n, t]) => /*#__PURE__*/React.createElement("li", {
+    }, [['1', 'Submit this form. You are on the roster right away.'], ['2', 'Hand Sarah $10 cash at any event, or email her to meet up.']].map(([n, t]) => /*#__PURE__*/React.createElement("li", {
       key: n,
       style: {
         display: 'flex',
@@ -8458,16 +8486,40 @@ try { (() => {
         fontSize: 13.5,
         color: 'var(--text-muted)'
       }
-    }, TREASURER.role, " \xB7 ", TREASURER.phone))), /*#__PURE__*/React.createElement(Button, {
+    }, TREASURER.role, " \xB7 ", TREASURER.email))), /*#__PURE__*/React.createElement(Button, {
       as: "a",
-      href: smsHref,
+      href: mailtoHref,
       variant: "outline",
       size: "sm",
       iconAfter: "arrow-right",
       style: {
         textDecoration: 'none'
       }
-    }, "Text Sarah about dues")), /*#__PURE__*/React.createElement(Card, {
+    }, "Email Sarah about dues"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        flexWrap: 'wrap',
+        marginTop: 10
+      }
+    }, /*#__PURE__*/React.createElement("a", {
+      href: outlookHref,
+      style: {
+        fontFamily: 'var(--font-body)',
+        fontSize: 13,
+        fontWeight: 600,
+        color: 'var(--text-link)',
+        textDecoration: 'underline'
+      }
+    }, "Prefer Outlook on the web?"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: 'var(--font-body)',
+        fontSize: 13,
+        color: 'var(--text-muted)',
+        userSelect: 'all'
+      }
+    }, TREASURER.email))), /*#__PURE__*/React.createElement(Card, {
       variant: "poster"
     }, /*#__PURE__*/React.createElement(Badge, {
       tone: "accent",
@@ -8658,7 +8710,7 @@ try { (() => {
 
   // Placeholder rosters — swap for the real thing once we pull the class lists.
   const ROSTER = {
-    '2026–27': [['Andrew Cornelius', 'Business administration', 'Senior', 'President'], ['Sarah Chotobar', 'Accounting', 'Junior', 'Treasurer'], ['Maya Okonkwo', 'Finance', 'Junior'], ['Dev Patel', 'Marketing', 'Sophomore'], ['Lena Fischer', 'Business administration', 'Senior'], ['Jonah Reyes', 'Accounting', 'Freshman'], ['Tessa Bright', 'Not business — just interested', 'Sophomore'], ['Caleb Nwosu', 'Finance', 'Senior']],
+    '2026–27': [['Andrew Cornelius', 'Business administration', 'Senior', 'President'], ['Sarah Chobotar', 'Accounting', 'Junior', 'Treasurer'], ['Maya Okonkwo', 'Finance', 'Junior'], ['Dev Patel', 'Marketing', 'Sophomore'], ['Lena Fischer', 'Business administration', 'Senior'], ['Jonah Reyes', 'Accounting', 'Freshman'], ['Tessa Bright', 'Not business — just interested', 'Sophomore'], ['Caleb Nwosu', 'Finance', 'Senior']],
     '2025–26': [['Priya Raman', 'Marketing', 'Senior'], ['Eli Barron', 'Business administration', 'Senior'], ['Noor Haddad', 'Accounting', 'Junior'], ['Grant Whitlow', 'Finance', 'Junior']],
     '2024–25': [['Isabel Moreno', 'Business administration', 'Senior'], ['Theo Lindqvist', 'Finance', 'Senior'], ['Amara Diallo', 'Marketing', 'Junior']]
   };

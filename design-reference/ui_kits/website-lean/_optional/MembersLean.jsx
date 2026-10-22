@@ -5,7 +5,7 @@ const { Button, Card, Badge, Tag, Icon } = window.SouthernBusinessClubDesignSyst
 const ROSTER = {
   '2026–27': [
     ['Andrew Cornelius', 'Business administration', 'Senior', 'President'],
-    ['Sarah Chotobar', 'Accounting', 'Junior', 'Treasurer'],
+    ['Sarah Chobotar', 'Accounting', 'Junior', 'Treasurer'],
     ['Maya Okonkwo', 'Finance', 'Junior'],
     ['Dev Patel', 'Marketing', 'Sophomore'],
     ['Lena Fischer', 'Business administration', 'Senior'],

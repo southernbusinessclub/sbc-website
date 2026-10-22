@@ -1,7 +1,7 @@
 (() => {
 const { Button, Card, Badge, Input, Select, Textarea, Checkbox, Radio, Switch, Icon } = window.SouthernBusinessClubDesignSystem_c9c84e;
 
-const TREASURER = { name: 'Sarah Chotobar', role: 'Treasurer', phone: '+1 (407) 912-2508', tel: '+14079122508' };
+const TREASURER = { name: 'Sarah Chobotar', role: 'Treasurer', email: 'sarahchobotar@southern.edu' };
 
 function JoinLean({ onSubmit, onNavigate }) {
   const [first, setFirst] = React.useState('');
@@ -9,8 +9,11 @@ function JoinLean({ onSubmit, onNavigate }) {
   const [texts, setTexts] = React.useState(true);
   const [directory, setDirectory] = React.useState(true);
   const [interests, setInterests] = React.useState({ Networking: true, 'Mock interviews': true, Headshots: false });
-  const smsBody = `Hey Sarah! This is ${first || '________'} ${last || '__________'}. I just registered for the business club. How can I get my dues to you?`;
-  const smsHref = 'sms:' + TREASURER.tel + '?&body=' + encodeURIComponent(smsBody);
+  const duesName = `${first} ${last}`.trim();
+  const duesSubject = `[SBC Dues] ${duesName || '[your name]'}`;
+  const duesBody = `Hi Sarah,\n\nI just signed up for Southern Business Club and want to pay my $10 dues. When and where can I hand it to you?\n\nThanks,\n${first || '[your name]'}`;
+  const mailtoHref = 'mailto:' + TREASURER.email + '?subject=' + encodeURIComponent(duesSubject) + '&body=' + encodeURIComponent(duesBody);
+  const outlookHref = 'https://outlook.office.com/mail/deeplink/compose?to=' + encodeURIComponent(TREASURER.email) + '&subject=' + encodeURIComponent(duesSubject) + '&body=' + encodeURIComponent(duesBody);
   return (
     <section style={{ padding: '56px 32px 84px' }}>
       <div style={{ maxWidth: 1040, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.25fr 1fr', gap: 40, alignItems: 'start' }}>
@@ -64,7 +67,7 @@ function JoinLean({ onSubmit, onNavigate }) {
             <Badge tone="solid">Paying dues</Badge>
             <h3 style={{ fontSize: 24, textTransform: 'uppercase', fontWeight: 900, margin: '12px 0 10px' }}>Cash to Sarah</h3>
             <ol style={{ margin: '0 0 16px', padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 12, fontSize: 14.5, color: 'var(--text-muted)' }}>
-              {[['1', 'Submit this form. You are on the roster right away.'], ['2', 'Hand Sarah $10 cash at any event, or text her to meet up.']].map(([n, t]) => (
+              {[['1', 'Submit this form. You are on the roster right away.'], ['2', 'Hand Sarah $10 cash at any event, or email her to meet up.']].map(([n, t]) => (
                 <li key={n} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                   <span style={{ flex: 'none', width: 22, height: 22, borderRadius: 999, background: 'var(--surface-brand-soft)', color: 'var(--green-700)', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 12.5, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{n}</span>
                   <span>{t}</span>
@@ -75,10 +78,14 @@ function JoinLean({ onSubmit, onNavigate }) {
               <span style={{ color: 'var(--green-700)', display: 'inline-flex' }}><Icon name="wallet" size={18} /></span>
               <div>
                 <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 14, color: 'var(--text-heading)' }}>{TREASURER.name}</div>
-                <div style={{ fontSize: 13.5, color: 'var(--text-muted)' }}>{TREASURER.role} · {TREASURER.phone}</div>
+                <div style={{ fontSize: 13.5, color: 'var(--text-muted)' }}>{TREASURER.role} · {TREASURER.email}</div>
               </div>
             </div>
-            <Button as="a" href={smsHref} variant="outline" size="sm" iconAfter="arrow-right" style={{ textDecoration: 'none' }}>Text Sarah about dues</Button>
+            <Button as="a" href={mailtoHref} variant="outline" size="sm" iconAfter="arrow-right" style={{ textDecoration: 'none' }}>Email Sarah about dues</Button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
+              <a href={outlookHref} style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, color: 'var(--text-link)', textDecoration: 'underline' }}>Prefer Outlook on the web?</a>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--text-muted)', userSelect: 'all' }}>{TREASURER.email}</span>
+            </div>
           </Card>
           <Card variant="poster">
             <Badge tone="accent" icon="party-popper">Signature event</Badge>

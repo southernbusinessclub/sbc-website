@@ -214,6 +214,29 @@
   color: var(--text-muted);
 }
 
+.outlookRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.outlookLink {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-link);
+  text-decoration: underline;
+}
+
+.emailText {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-muted);
+  user-select: all;
+}
+
 .posterTitle {
   font-size: 26px;
   text-transform: uppercase;

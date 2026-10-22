@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Badge, Button, Card, Icon, Input } from "@/components/ui";
-import { CURRENT_SCHOOL_YEAR, TREASURER } from "@/lib/school-year";
+import { CURRENT_SCHOOL_YEAR, DUES_EMAIL_TAG, TREASURER, mailtoHref } from "@/lib/school-year";
 import { isSupabaseConfigured } from "@/lib/supabase/is-configured";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./claim.module.css";
@@ -171,18 +171,20 @@ export default function ClaimPage() {
                   </div>
                   <p className={styles.duesNudgeBody}>
                     You still get the account and your history. Hand Sarah $10 at the next event to stay a member —
-                    or if you already paid her this year, text her and she&apos;ll fix the record.
+                    or if you already paid her this year, email her and she&apos;ll fix the record.
                   </p>
                   <Button
                     as="a"
-                    href={`sms:${TREASURER.tel}?&body=${encodeURIComponent(
-                      `Hey Sarah! This is ${match.first_name} ${match.last_name}. I think I already paid my club dues but the site has me as unpaid. Can you check?`,
-                    )}`}
+                    href={mailtoHref(
+                      TREASURER.email,
+                      `${DUES_EMAIL_TAG} ${match.first_name} ${match.last_name}`,
+                      `Hi Sarah,\n\nThis is ${match.first_name} ${match.last_name}. I think I already paid my club dues but the site has me as unpaid. Can you check?\n\nThanks,\n${match.first_name}`,
+                    )}
                     variant="outline"
                     size="sm"
                     style={{ textDecoration: "none" }}
                   >
-                    Text Sarah
+                    Email Sarah
                   </Button>
                 </div>
               ) : null}
@@ -283,14 +285,16 @@ export default function ClaimPage() {
                 </Button>
                 <Button
                   as="a"
-                  href={`sms:${TREASURER.tel}?&body=${encodeURIComponent(
-                    "Hey Sarah! I'm already in the business club but the site can't find me. Can you add my email?",
-                  )}`}
+                  href={mailtoHref(
+                    TREASURER.email,
+                    "[SBC] Roster lookup",
+                    "Hi Sarah,\n\nI'm already in the business club but the site can't find me. Can you add my email?\n\nThanks,\n[your name]",
+                  )}
                   variant="ghost"
                   full
                   style={{ textDecoration: "none" }}
                 >
-                  I&apos;m sure I&apos;m a member — text Sarah
+                  I&apos;m sure I&apos;m a member — email Sarah
                 </Button>
               </div>
             </div>

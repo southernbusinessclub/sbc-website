@@ -6,7 +6,7 @@ Public website and officer admin for the Southern Business Club at Southern Adve
 Business rules:
 - Dues are **$10 cash per school year**, handed to the treasurer. **The site never takes payments.** Officers record payment by flipping a switch in Admin.
 - Joining creates a member record + account. Returning members **claim** an existing roster record by email instead of re-joining.
-- After joining, the member texts the treasurer via a prefilled `sms:` link.
+- After joining, the member emails the treasurer via a prefilled `mailto:` link.
 - Officers publish/unpublish events; unpublished events are hidden from the public Events page.
 
 ## About the design files
@@ -75,7 +75,7 @@ Button, Card, Badge, Tag, Icon, IconButton, EventCard, Dialog, Toast, Tooltip, I
 
 ## Open items to confirm with the owner
 1. Workshops still lists "Merch discount" and a member-directory card; Join has a "Show me on the member directory" switch. Remove or keep?
-2. Join names treasurer "Sarah Chotobar, +1 (407) 912-2508"; Admin sample data lists Andrew Kim as Treasurer, Sarah Boateng as President. Confirm real officers.
+2. Join names treasurer "Sarah Chobotar, sarahchobotar@southern.edu"; Admin sample data lists Andrew Kim as Treasurer, Sarah Boateng as President. Confirm real officers.
 3. Email provider for Claim verification codes.
 4. Domain; whether to import the existing Excel roster as seed data.
 5. `_optional/ShopLean.jsx` and `_optional/MembersLean.jsx` are Phase 2 reference only — don't build.

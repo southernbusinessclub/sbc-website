@@ -14,7 +14,7 @@ import {
   Switch,
   Textarea,
 } from "@/components/ui";
-import { TREASURER } from "@/lib/school-year";
+import { DUES_EMAIL_TAG, TREASURER, mailtoHref, outlookWebComposeHref } from "@/lib/school-year";
 import { createClient } from "@/lib/supabase/client";
 import { submitJoinRequest } from "./actions";
 import styles from "./join.module.css";
@@ -85,8 +85,11 @@ export default function JoinPage() {
     setResendMessage("Sent! Give it a few minutes to land.");
   };
 
-  const smsBody = `Hey Sarah! This is ${first || "________"} ${last || "__________"}. I just registered for the business club. How can I get my dues to you?`;
-  const smsHref = `sms:${TREASURER.tel}?&body=${encodeURIComponent(smsBody)}`;
+  const duesMemberName = `${first} ${last}`.trim();
+  const duesSubject = `${DUES_EMAIL_TAG} ${duesMemberName || "[your name]"}`;
+  const duesBody = `Hi Sarah,\n\nI just signed up for Southern Business Club and want to pay my $10 dues. When and where can I hand it to you?\n\nThanks,\n${first.trim() || "[your name]"}`;
+  const duesMailtoHref = mailtoHref(TREASURER.email, duesSubject, duesBody);
+  const duesOutlookHref = outlookWebComposeHref(TREASURER.email, duesSubject, duesBody);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -131,7 +134,7 @@ export default function JoinPage() {
           </p>
           <p className={styles.successBody}>
             Once you click it, an officer will add you to the roster. Go ahead and hand Sarah $10 cash at any event,
-            or text her to meet up, so your dues are ready to record the moment you&apos;re added.
+            or email her to meet up, so your dues are ready to record the moment you&apos;re added.
           </p>
           <div className={styles.resendRow}>
             <Button variant="outline" size="sm" disabled={resendCooldown > 0 || resendStatus === "sending"} onClick={onResend}>
@@ -148,12 +151,18 @@ export default function JoinPage() {
             ) : null}
           </div>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <Button as="a" href={smsHref} iconAfter="arrow-right" style={{ textDecoration: "none" }}>
-              Text Sarah about dues
+            <Button as="a" href={duesMailtoHref} iconAfter="arrow-right" style={{ textDecoration: "none" }}>
+              Email Sarah about dues
             </Button>
             <Button as="a" href="/" variant="outline" style={{ textDecoration: "none" }}>
               Back home
             </Button>
+          </div>
+          <div className={styles.outlookRow}>
+            <a href={duesOutlookHref} className={styles.outlookLink}>
+              Prefer Outlook on the web?
+            </a>
+            <span className={styles.emailText}>{TREASURER.email}</span>
           </div>
         </div>
       </section>
@@ -295,7 +304,7 @@ export default function JoinPage() {
               </li>
               <li className={styles.duesStep}>
                 <span className={styles.duesStepNumber}>2</span>
-                <span>Hand Sarah $10 cash at any event, or text her to meet up.</span>
+                <span>Hand Sarah $10 cash at any event, or email her to meet up.</span>
               </li>
             </ol>
             <div className={styles.treasurerRow}>
@@ -305,13 +314,26 @@ export default function JoinPage() {
               <div>
                 <div className={styles.treasurerName}>{TREASURER.name}</div>
                 <div className={styles.treasurerRole}>
-                  {TREASURER.role} · {TREASURER.phone}
+                  {TREASURER.role} · {TREASURER.email}
                 </div>
               </div>
             </div>
-            <Button as="a" href={smsHref} variant="outline" size="sm" iconAfter="arrow-right" style={{ textDecoration: "none" }}>
-              Text Sarah about dues
+            <Button
+              as="a"
+              href={duesMailtoHref}
+              variant="outline"
+              size="sm"
+              iconAfter="arrow-right"
+              style={{ textDecoration: "none" }}
+            >
+              Email Sarah about dues
             </Button>
+            <div className={styles.outlookRow}>
+              <a href={duesOutlookHref} className={styles.outlookLink}>
+                Prefer Outlook on the web?
+              </a>
+              <span className={styles.emailText}>{TREASURER.email}</span>
+            </div>
           </Card>
           <Card variant="poster">
             <Badge tone="accent" icon="party-popper">
