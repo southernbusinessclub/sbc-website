@@ -83,7 +83,7 @@ function JoinLean({ onSubmit, onNavigate }) {
             </div>
             <Button as="a" href={mailtoHref} variant="outline" size="sm" iconAfter="arrow-right" style={{ textDecoration: 'none' }}>Email Sarah about dues</Button>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
-              <a href={outlookHref} style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, color: 'var(--text-link)', textDecoration: 'underline' }}>Prefer Outlook on the web?</a>
+              <a href={outlookHref} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, color: 'var(--text-link)', textDecoration: 'underline' }}>Prefer Outlook on the web?</a>
               <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--text-muted)', userSelect: 'all' }}>{TREASURER.email}</span>
             </div>
           </Card>

@@ -159,7 +159,7 @@ export default function JoinPage() {
             </Button>
           </div>
           <div className={styles.outlookRow}>
-            <a href={duesOutlookHref} className={styles.outlookLink}>
+            <a href={duesOutlookHref} target="_blank" rel="noopener noreferrer" className={styles.outlookLink}>
               Prefer Outlook on the web?
             </a>
             <span className={styles.emailText}>{TREASURER.email}</span>
@@ -329,7 +329,7 @@ export default function JoinPage() {
               Email Sarah about dues
             </Button>
             <div className={styles.outlookRow}>
-              <a href={duesOutlookHref} className={styles.outlookLink}>
+              <a href={duesOutlookHref} target="_blank" rel="noopener noreferrer" className={styles.outlookLink}>
                 Prefer Outlook on the web?
               </a>
               <span className={styles.emailText}>{TREASURER.email}</span>

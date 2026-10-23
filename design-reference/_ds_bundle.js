@@ -5040,6 +5040,8 @@ try { (() => {
       }
     }, /*#__PURE__*/React.createElement("a", {
       href: outlookHref,
+      target: "_blank",
+      rel: "noopener noreferrer",
       style: {
         fontFamily: 'var(--font-body)',
         fontSize: 13,
@@ -8505,6 +8507,8 @@ try { (() => {
       }
     }, /*#__PURE__*/React.createElement("a", {
       href: outlookHref,
+      target: "_blank",
+      rel: "noopener noreferrer",
       style: {
         fontFamily: 'var(--font-body)',
         fontSize: 13,
